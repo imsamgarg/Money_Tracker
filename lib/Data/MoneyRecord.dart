@@ -1,5 +1,6 @@
 class MoneyRecord {
      double balance;
+
      List<Record> record;
 
     MoneyRecord({this.balance, this.record});

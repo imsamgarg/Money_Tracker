@@ -36,6 +36,7 @@ dependencies:
   shared_preferences: ^0.5.12+4
   google_sign_in: ^4.5.9
   ext_storage: ^1.0.3
+  cloud_firestore: ^0.16.0
 
 dev_dependencies:
   flutter_launcher_icons: "^0.7.3"

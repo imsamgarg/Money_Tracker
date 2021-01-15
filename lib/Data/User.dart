@@ -28,7 +28,7 @@ class UserData extends ChangeNotifier {
     }
   }
 
-  Future login() async {
+  Future<bool> login() async {
     _user = _firebaseAuth.currentUser;
     if (_user != null) {
       return true;

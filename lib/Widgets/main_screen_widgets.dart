@@ -21,24 +21,17 @@ class LastSevenDaysDataRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Data>(
       builder: (BuildContext context, Data value, Widget child) {
-        var color = (value.thisWeekAmount.isNegative) ? redColor : greenColor;
-        return Row(
-          children: <Widget>[
-            Icon(
-              (value.thisWeekAmount.isNegative) ? Icons.remove : Icons.add,
+        final color = (value.thisWeekAmount.isNegative) ? redColor : greenColor;
+        // final sign =(value.thisWeekAmount.isNegative)?String.fromCharCode(0x2212):String.fromCharCode(0x002B);
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Text(
+            '$rupeeSign ${value.thisWeekAmount}',
+            style: TextStyle(
+              fontSize: fontSizeNormal + 4,
               color: color,
             ),
-            const SizedBox(
-              width: 15,
-            ),
-            Text(
-              'Rs.${value.thisWeekAmount}',
-              style: TextStyle(
-                fontSize: fontSizeNormal + 4,
-                color: color,
-              ),
-            ),
-          ],
+          ),
         );
       },
     );
@@ -50,21 +43,14 @@ class YesterdayDataRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Data>(
       builder: (BuildContext context, Data value, Widget child) {
-        var color = (value.yesterdayAmount.isNegative) ? redColor : greenColor;
-        return Row(
-          children: <Widget>[
-            Icon(
-              (value.yesterdayAmount.isNegative) ? Icons.remove : Icons.add,
-              color: color,
-            ),
-            const SizedBox(
-              width: 15,
-            ),
-            Text(
-              'Rs.${value.yesterdayAmount.abs()}',
-              style: TextStyle(fontSize: fontSizeNormal + 4, color: color),
-            ),
-          ],
+        final color = (value.yesterdayAmount.isNegative) ? redColor : greenColor;
+        // final sign =(value.yesterdayAmount.isNegative)?String.fromCharCode(0x2212):String.fromCharCode(0x002B);
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Text(
+            '$rupeeSign ${value.yesterdayAmount.abs()}',
+            style: TextStyle(fontSize: fontSizeNormal + 4, color: color),
+          ),
         );
       },
     );
@@ -76,18 +62,12 @@ class LastRecordText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Data>(
       builder: (BuildContext context, Data value, Widget child) {
-        var color = (value.lastTransaction.isNegative) ? redColor : greenColor;
-        return Row(
-          children: <Widget>[
-            Icon(
-              (value.lastTransaction.isNegative) ? Icons.remove : Icons.add,
-              color: color,
-            ),
-            Text(
-              ' Rs.${value.lastTransaction.abs()}',
-              style: TextStyle(color: color, fontSize: fontSizeNormal + 4),
-            ),
-          ],
+        final color = (value.lastTransaction.isNegative) ? redColor : greenColor;
+        // final sign =(value.lastTransaction.isNegative)?String.fromCharCode(0x2212):String.fromCharCode(0x002B);
+        // print(value.yesterdayAmount.isNegative);
+        return Text(
+          '$rupeeSign ${value.lastTransaction.abs()}',
+          style: TextStyle(color: color, fontSize: fontSizeNormal + 4),
         );
       },
     );
@@ -99,7 +79,7 @@ class BalanceText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<Data>(
       builder: (BuildContext context, Data value, Widget child) => Text(
-        'Rs.${value.balance}',
+        '$rupeeSign ${value.balance}',
         style: TextStyle(fontSize: fontSizeNormal + 4),
       ),
     );

@@ -43,18 +43,63 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Future<bool> _loadDataFromDisk;
-  Future<bool> _login;
+
   Future<FirebaseApp> _initialiseFlutterApp;
+
+  @override
+  void initState() {
+
+    _initialiseFlutterApp = Firebase.initializeApp();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _initialiseFlutterApp,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done)
+          return MainScreenUI();
+        if (snapshot.hasError)
+          return Center(
+            child: Text("Something Went Wrong"),
+          );
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+
+}
+
+class MainScreenUI extends StatefulWidget {
+
+  @override
+  _MainScreenUIState createState() => _MainScreenUIState();
+}
+
+class _MainScreenUIState extends State<MainScreenUI> {
+
+  Future<bool> _login;
+  Future<bool> _loadDataFromDisk;
+
+  Future<bool> fetchData() async {
+    PermissionStatus status = await Permission.storage.request();
+    if (status.isGranted) {
+      await Provider.of<Data>(context, listen: false).uploadData();
+      return true;
+    } else
+      return false;
+  }
 
   @override
   void initState() {
     _loadDataFromDisk = fetchData();
     _login = context.read<UserData>().login();
-    _initialiseFlutterApp = Firebase.initializeApp();
+    // TODO: implement initState
     super.initState();
   }
-
   final List<Widget> mainColumnWidgets = [
     Flexible(
       child: Center(
@@ -176,68 +221,47 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _initialiseFlutterApp,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done)
-          return FutureBuilder(
+   return  FutureBuilder(
+     future: _login,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done)
+            return FutureBuilder(
+              future: _loadDataFromDisk,
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done)
-                  return FutureBuilder(
-                    future: _loadDataFromDisk,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        if (snapshot.data == true)
-                          return Builder(
-                            builder: (context) {
-                              return Container(
-                                margin: const EdgeInsets.all(10),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.max,
-                                  crossAxisAlignment: CrossAxisAlignment
-                                      .stretch,
-                                  children: mainColumnWidgets,
-                                ),
-                              );
-                            },
-                          );
-                        else
-                          return Center(
-                            child: Text(
-                              'Permission Denied',
-                              style: normalTextStyle,
-                            ),
-                          );
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(),
+                if (snapshot.hasData) {
+                  if (snapshot.data == true)
+                    return Builder(
+                      builder: (context) {
+                        return Container(
+                          margin: const EdgeInsets.all(10),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.max,
+                            crossAxisAlignment: CrossAxisAlignment
+                                .stretch,
+                            children: mainColumnWidgets,
+                          ),
                         );
-                      }
-                    },
+                      },
+                    );
+                  else
+                    return Center(
+                      child: Text(
+                        'Permission Denied',
+                        style: normalTextStyle,
+                      ),
+                    );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
                   );
-                if(snapshot.hasError)
-                  return Center(child: Text("Login Failed"),);
-                return Center(child: CircularProgressIndicator(),);
-              }
-          );
-        if (snapshot.hasError)
-          return Center(
-            child: Text("Something Went Wrong"),
-          );
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
+                }
+              },
+            );
+          if(snapshot.hasError)
+            return Center(child: Text("Login Failed"),);
+          return Center(child: CircularProgressIndicator(),);
+        }
     );
-  }
-
-  Future<bool> fetchData() async {
-    PermissionStatus status = await Permission.storage.request();
-    if (status.isGranted) {
-      await Provider.of<Data>(context, listen: false).uploadData();
-      return true;
-    } else
-      return false;
   }
 }
 
@@ -266,16 +290,19 @@ class NewTransactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FlatButton(
-      onPressed: () => _showBottomSheet(context),
-      color: accentColor,
-      shape: cardShape,
-      child: Container(
-        height: 55,
-        child: Center(
-          child: Text(
-            'New Transaction',
-            style: TextStyle(fontSize: fontSizeNormal),
+    return Hero(
+      tag: "Button",
+      child: FlatButton(
+        onPressed: () => _showBottomSheet(context),
+        color: accentColor,
+        shape: cardShape,
+        child: Container(
+          height: 55,
+          child: Center(
+            child: Text(
+              'New Transaction',
+              style: TextStyle(fontSize: fontSizeNormal),
+            ),
           ),
         ),
       ),

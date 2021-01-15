@@ -13,6 +13,26 @@ class History extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) => Scaffold(
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 22),
+          child: Hero(
+            tag: "Button",
+            child: FlatButton(
+              onPressed: (){},
+              color: redColor,
+              shape: cardShape,
+              child: Container(
+                height: 55,
+                child: Center(
+                  child: Text(
+                    'Delete All ',
+                    style: TextStyle(fontSize: fontSizeNormal),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         appBar: AppBar(
           title: Text('History'),
         ),
@@ -105,7 +125,7 @@ class _TileState extends State<Tile> {
                 color: color,
               ), onPressed: ()=>null,
             ),
-            title: Text('Rs.${item.amount}'),
+            title: Text('$rupeeSign ${item.amount}'),
             subtitle: Text('Date: ${_format.format(date)}'),
             trailing: IconButton(
               icon: Icon(
@@ -131,7 +151,7 @@ class _TileState extends State<Tile> {
           duration: Duration(milliseconds: 200),
           child: Card(
             margin: EdgeInsets.only(left: 4,right: 4),
-            color: accentColor.withRed(110),
+            color: accentColor,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(10),
