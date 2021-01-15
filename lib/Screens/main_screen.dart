@@ -1,26 +1,34 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Data.dart';
+import 'package:newmoneytracker/Data/User.dart';
+import 'package:newmoneytracker/Screens/backup_screen.dart';
+import '../Widgets/main_screen_widgets.dart';
 import 'package:newmoneytracker/Data/constants.dart';
 import 'package:newmoneytracker/Screens/history.dart';
 import 'package:provider/provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatelessWidget {
-  static const String route='main_screen';
+  static const String route = 'main_screen';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(appName),
         actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 8.0),
-            child: IconButton(
-              icon: Icon(Icons.history),
-              onPressed: () {
-                Navigator.pushNamed(context, History.route);
-              },
-            ),
+          IconButton(
+            icon: Icon(Icons.history),
+            onPressed: () {
+              Navigator.pushNamed(context, History.route);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.backup),
+            onPressed: () {
+              Navigator.pushNamed(context, BackupScreen.route);
+            },
           ),
         ],
       ),
@@ -35,11 +43,15 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  Future<bool> _instance;
+  Future<bool> _loadDataFromDisk;
+  Future<bool> _login;
+  Future<FirebaseApp> _initialiseFlutterApp;
 
   @override
   void initState() {
-    _instance = fetchData();
+    _loadDataFromDisk = fetchData();
+    _login = context.read<UserData>().login();
+    _initialiseFlutterApp = Firebase.initializeApp();
     super.initState();
   }
 
@@ -164,45 +176,68 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('Wtf Is Going on');
-   // getList();
-
     return FutureBuilder(
-      future: _instance,
+      future: _initialiseFlutterApp,
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          if(snapshot.data==true)
-          return Builder(
-            builder: (context) {
-              return Container(
-                margin: const EdgeInsets.all(10),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: mainColumnWidgets,
-                ),
-              );
-            },
+        if (snapshot.connectionState == ConnectionState.done)
+          return FutureBuilder(
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done)
+                  return FutureBuilder(
+                    future: _loadDataFromDisk,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        if (snapshot.data == true)
+                          return Builder(
+                            builder: (context) {
+                              return Container(
+                                margin: const EdgeInsets.all(10),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .stretch,
+                                  children: mainColumnWidgets,
+                                ),
+                              );
+                            },
+                          );
+                        else
+                          return Center(
+                            child: Text(
+                              'Permission Denied',
+                              style: normalTextStyle,
+                            ),
+                          );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  );
+                if(snapshot.hasError)
+                  return Center(child: Text("Login Failed"),);
+                return Center(child: CircularProgressIndicator(),);
+              }
           );
-          else
-            return Center(child: Text('Permission Dedo Yr',style: normalTextStyle,),);
-        } else {
+        if (snapshot.hasError)
           return Center(
-            child: CircularProgressIndicator(),
+            child: Text("Something Went Wrong"),
           );
-        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
       },
     );
   }
 
   Future<bool> fetchData() async {
-   PermissionStatus status=await Permission.storage.request();
-   if(status.isGranted) {
-     await Provider.of<Data>(context, listen: false).uploadData();
-     return true;
-   }
-   else
-     return false;
+    PermissionStatus status = await Permission.storage.request();
+    if (status.isGranted) {
+      await Provider.of<Data>(context, listen: false).uploadData();
+      return true;
+    } else
+      return false;
   }
 }
 
@@ -212,16 +247,20 @@ class NewTransactionButton extends StatelessWidget {
       isScrollControlled: true,
       context: context,
       shape: cardShape,
-      builder: (context) => Container(
-        child: Padding(
-          padding: EdgeInsets.only(
-              bottom: MediaQuery.of(context).viewInsets.bottom,
-              left: 20,
-              right: 20,
-              top: 20),
-          child: BottomSheetColumn(),
-        ),
-      ),
+      builder: (context) =>
+          Container(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  bottom: MediaQuery
+                      .of(context)
+                      .viewInsets
+                      .bottom,
+                  left: 20,
+                  right: 20,
+                  top: 20),
+              child: BottomSheetColumn(),
+            ),
+          ),
     );
   }
 
@@ -287,31 +326,39 @@ class _BottomSheetColumnState extends State<BottomSheetColumn> {
         ),
         Container(
           height: 50,
-          width: MediaQuery.of(context).size.width - 40,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width - 40,
           child: Row(
             children: <Widget>[
               Consumer<Data>(
                 builder: (BuildContext context, Data value, Widget child) =>
                     ActionButton(
-                  function: () {
-                    print(remarks);
-                    print(amount);
-                    if (remarks != null && amount > 0) {
-                      Provider.of<Data>(context,listen: false)
-                          .addTransaction(amount, remarks);
-                      Navigator.pop(context);
-                    }
-                  },
-                  text: 'Add',
-                ),
+                      function: () {
+                        print(remarks);
+                        print(amount);
+                        if (remarks != null && amount > 0) {
+                          Provider.of<Data>(context, listen: false)
+                              .addTransaction(amount, remarks);
+                          Navigator.pop(context);
+                        }
+                      },
+                      text: 'Add',
+                    ),
               ),
               const SizedBox(
                 width: 20,
               ),
               ActionButton(
                 function: () {
-                  if (remarks != null && amount > 0&&amount<=Provider.of<Data>(context,listen: false).balance) {
-                    Provider.of<Data>(context,listen: false)
+                  if (remarks != null &&
+                      amount > 0 &&
+                      amount <=
+                          Provider
+                              .of<Data>(context, listen: false)
+                              .balance) {
+                    Provider.of<Data>(context, listen: false)
                         .addTransaction(-amount, remarks);
                     Navigator.pop(context);
                   }
@@ -348,106 +395,6 @@ class ActionButton extends StatelessWidget {
             style: normalTextStyle,
           ),
         ),
-      ),
-    );
-  }
-}
-
-class HeadingWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      'Hi! Sam Garg',
-      style: TextStyle(fontSize: headingFontSize, color: whiteColor),
-    );
-  }
-}
-
-class LastSevenDaysDataRow extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<Data>(
-      builder: (BuildContext context, Data value, Widget child) {
-        var color = (value.thisWeekAmount.isNegative) ? redColor : greenColor;
-        return Row(
-        children: <Widget>[
-          Icon(
-            (value.thisWeekAmount.isNegative) ? Icons.remove : Icons.add,
-            color: color,
-          ),
-          const SizedBox(
-            width: 15,
-          ),
-          Text(
-            'Rs.${value.thisWeekAmount}',
-            style: TextStyle(
-              fontSize: fontSizeNormal + 4,
-              color: color,
-            ),
-          ),
-        ],
-      );
-      },
-    );
-  }
-}
-
-class YesterdayDataRow extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<Data>(
-      builder: (BuildContext context, Data value, Widget child) {
-        var color = (value.yesterdayAmount.isNegative) ? redColor : greenColor;
-        return Row(
-          children: <Widget>[
-            Icon(
-              (value.yesterdayAmount.isNegative) ? Icons.remove : Icons.add,
-              color: color,
-            ),
-            const SizedBox(
-              width: 15,
-            ),
-            Text(
-              'Rs.${value.yesterdayAmount.abs()}',
-              style: TextStyle(fontSize: fontSizeNormal + 4, color: color),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class LastRecordText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<Data>(
-      builder: (BuildContext context, Data value, Widget child) {
-        var color = (value.lastTransaction.isNegative) ? redColor : greenColor;
-        return Row(
-          children: <Widget>[
-            Icon(
-              (value.lastTransaction.isNegative) ? Icons.remove : Icons.add,
-              color: color,
-            ),
-            Text(
-              ' Rs.${value.lastTransaction.abs()}',
-              style: TextStyle(color: color, fontSize: fontSizeNormal + 4),
-            ),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class BalanceText extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<Data>(
-      builder: (BuildContext context, Data value, Widget child) => Text(
-        'Rs.${value.balance}',
-        style: TextStyle(fontSize: fontSizeNormal + 4),
       ),
     );
   }
