@@ -1,6 +1,6 @@
-# newmoneytracker
+# Money Tracker App
 
-My New Money Tracker
+It is a simple personal financing app.
 
 ## Getting Started
 
