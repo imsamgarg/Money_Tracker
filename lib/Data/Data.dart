@@ -4,49 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:newmoneytracker/Data/MoneyRecord.dart';
 import 'dart:convert';
 import 'dart:io';
-
-class DateUtils {
-
-  static int currentWeek(DateTime dateTime) {
-    return weekOfYear(dateTime);
-  }
-
-  static int weekOfYear(DateTime date) {
-    DateTime monday = weekStart(date);
-    DateTime first = weekYearStartDate(monday.year);
-
-    int week = 1 + (monday.difference(first).inDays / 7).floor();
-
-    if (week == 53 && DateTime(monday.year, 12, 31).weekday < 4)
-      week = 1;
-
-    return week;
-  }
-
-  static DateTime weekStart(DateTime date) {
-    // This is ugly, but to avoid problems with daylight saving
-    DateTime monday = DateTime.utc(date.year, date.month, date.day);
-    monday = monday.subtract(Duration(days: monday.weekday - 1));
-
-    return monday;
-  }
-
-  static DateTime weekEnd(DateTime date) {
-    // This is ugly, but to avoid problems with daylight saving
-    // Set the last microsecond to really be the end of the week
-    DateTime sunday = DateTime.utc(date.year, date.month, date.day, 23, 59, 59, 999, 999999);
-    sunday = sunday.add(Duration(days: 7 - sunday.weekday));
-
-    return sunday;
-  }
-
-  static DateTime weekYearStartDate(int year) {
-    final firstDayOfYear = DateTime.utc(year, 1, 1);
-    final dayOfWeek = firstDayOfYear.weekday;
-
-    return firstDayOfYear.add(Duration(days: (dayOfWeek <= DateTime.thursday ? 1 : 8) - dayOfWeek));
-  }
-}
+import 'Dates.dart';
 
 class Data extends ChangeNotifier {
   MoneyRecord _record;
@@ -150,18 +108,6 @@ class Data extends ChangeNotifier {
     return ((dayOfYear - date.weekday + 10) / 7).floor();
   }
 
-//  double get thisWeekAmount {
-//    _dateTime=DateTime.now().toLocal();
-//    int currentDate = _dateTime.day;
-//    double amount = 0;
-//
-//    for (int i = 0; i < _record.record.length; i++) {
-//      if (DateTime.parse(_record.record[i].date).weekday == 7 ||
-//          DateTime.parse(_record.record[i].date).day != currentDate) break;
-//      amount += _record.record[i].amount;
-//    }
-//    return amount;
-//  }
   double get thisWeekAmount {
     _dateTime=DateTime.now().toLocal();
     int currentWeek=DateUtils.currentWeek(_dateTime);
