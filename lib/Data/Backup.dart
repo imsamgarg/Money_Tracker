@@ -15,10 +15,10 @@ class Backup extends ChangeNotifier {
   }
 
 
-  Future loadLastBackupDate() async {
+  Future loadLastBackupDate(SharedPreferences sharedPreferences) async {
     try {
-      SharedPreferences sharedPreferences =
-      await SharedPreferences.getInstance();
+      // SharedPreferences sharedPreferences =
+      // await SharedPreferences.getInstance();
       String _date = sharedPreferences.getString(sharedDateKey);
       if (_date != null) _lastBackupDate = DateTime.parse(_date);
       _lastBackupDate = null;
@@ -28,10 +28,10 @@ class Backup extends ChangeNotifier {
     }
   }
 
-   Future saveLastDate()async{
+   Future saveLastDate(SharedPreferences sharedPreferences)async{
      try {
-       SharedPreferences sharedPreferences =
-       await SharedPreferences.getInstance();
+       // SharedPreferences sharedPreferences =
+       await SharedPreferences.getInstance();//
        sharedPreferences.setString(sharedDateKey,DateTime.now().toLocal().toString());
        return true;
      } catch (e) {
@@ -39,13 +39,13 @@ class Backup extends ChangeNotifier {
      }
    }
 
-  Future performBackup(MoneyRecord record, String userId) async {
+  Future performBackup(MoneyRecord record, String userId,SharedPreferences sharedPreferences) async {
     try {
       await _firebaseFirestore
           .collection(collectionName)
           .doc(userId)
           .set(record.toJson());
-      await saveLastDate();
+      await saveLastDate(sharedPreferences);
       return true;
     } catch (e) {
       throw e;

@@ -143,56 +143,28 @@ class ThemeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ThemeRadioTile(
-          title: "Light",
-          themeMode: ThemeMode.light,
+        Card(
+          child: ThemeRadioTile(
+            title: "Light",
+            themeMode: ThemeMode.light,
+          ),
         ),
-        ThemeRadioTile(
-          title: "Dark",
-          themeMode: ThemeMode.dark,
+        Card(
+          child: ThemeRadioTile(
+            title: "Dark",
+            themeMode: ThemeMode.dark,
+          ),
         ),
-        ThemeRadioTile(
-          title: "System Default",
-          themeMode: ThemeMode.system,
+        Card(
+          child: ThemeRadioTile(
+            title: "System Default",
+            themeMode: ThemeMode.system,
+          ),
         ),
       ],
     );
   }
 }
-
-// class LightThemeRadioTile extends StatelessWidget {
-//   const LightThemeRadioTile({
-//     Key key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       child: RadioListTile(
-//           value: ThemeMode.light,
-//           groupValue: Provider.of<ThemeManager>(context).themeMode,
-//           title: Text("Light"),
-//           onChanged: (value) {}),
-//     );
-//   }
-// }
-//
-// class DarkThemeRadioTile extends StatelessWidget {
-//   const DarkThemeRadioTile({
-//     Key key,
-//   }) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Card(
-//       child: RadioListTile(
-//           value: ThemeMode.dark,
-//           groupValue: Provider.of<ThemeManager>(context).themeMode,
-//           title: Text("Dark"),
-//           onChanged: (value) {}),
-//     );
-//   }
-// }
 
 class ThemeRadioTile extends StatelessWidget {
   const ThemeRadioTile({
@@ -206,29 +178,26 @@ class ThemeRadioTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shared = Provider.of<SharedPreferences>(context,listen: false);
-    final loadingClass=Provider.of<LoadingClass>(context,listen: false);
-    return Card(
-      child: RadioListTile(
+    final shared = Provider.of<SharedPreferences>(context, listen: false);
+    final loadingClass = Provider.of<LoadingClass>(context, listen: false);
+    return Consumer<ThemeManager>(
+      builder: (context, value, _) => RadioListTile(
           value: themeMode,
-          groupValue: Provider.of<ThemeManager>(context).themeMode,
+          groupValue: value.themeMode,
           title: Text(title),
           onChanged: (value) {
             loadingClass.startLoading();
-            Provider.of<ThemeManager>(context,listen: false)
+            Provider.of<ThemeManager>(context, listen: false)
                 .changeThemeMode(value, shared)
                 .then((value) {
-                  print(value);
-                  loadingClass.stopLoading();
-                  loadingClass.showSuccessMsg("Theme Changed SuccessFully");
-            })
-                .catchError((e) {
-                  print(e);
-                  loadingClass.stopLoading();
-                  loadingClass.showError("Something Went Wrong Try Again!");
+              print(value);
+              loadingClass.stopLoading();
+              loadingClass.showSuccessMsg("Theme Changed SuccessFully");
+            }).catchError((e) {
+              print(e);
+              loadingClass.stopLoading();
+              loadingClass.showError("Something Went Wrong Try Again!");
             });
-
-
           }),
     );
   }
@@ -304,38 +273,29 @@ class ChangeColorButton extends StatelessWidget {
   // final int index;
   @override
   Widget build(BuildContext context) {
+    final _shared = Provider.of<SharedPreferences>(context, listen: false);
+    final loadingClass = Provider.of<LoadingClass>(context, listen: false);
     return Padding(
       padding: const EdgeInsets.all(padding),
-      child: Consumer<ThemeManager>(
-        builder: (BuildContext context, ThemeManager value, Widget child) {
-          final _shared =
-              Provider.of<SharedPreferences>(context, listen: false);
-          final loadingClass=Provider.of<LoadingClass>(context);
-          return GestureDetector(
-            onTap: () {
-              loadingClass.startLoading();
-              Provider.of<ThemeManager>(context,listen: false)
-                  .changeAccentColor(color, _shared)
-                  .then((value) {
-                print(value);
-                loadingClass.stopLoading();
-                loadingClass.showSuccessMsg("Accent Color Changed SuccessFully");
-              })
-                  .catchError((e) {
-                print(e);
-                loadingClass.stopLoading();
-                loadingClass.showError("Something Went Wrong Try Again!");
-              });
-
-
-            },
-            child: Container(
-              height: 45,
-              width: 45,
-              color: color,
-            ),
-          );
+      child: GestureDetector(
+        onTap: () {
+          loadingClass.startLoading();
+          Provider.of<ThemeManager>(context, listen: false)
+              .changeAccentColor(color, _shared)
+              .then((value) {
+            loadingClass.stopLoading();
+            loadingClass.showSuccessMsg("Accent Color Changed SuccessFully");
+          }).catchError((e) {
+            print(e);
+            loadingClass.stopLoading();
+            loadingClass.showError("Something Went Wrong Try Again!");
+          });
         },
+        child: Container(
+          height: 45,
+          width: 45,
+          color: color,
+        ),
       ),
     );
   }

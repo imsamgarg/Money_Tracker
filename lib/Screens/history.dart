@@ -6,7 +6,6 @@ import 'package:newmoneytracker/Data/constants.dart';
 import 'package:provider/provider.dart';
 
 class History extends StatelessWidget {
-
   static const String route = 'history';
 
   @override
@@ -14,11 +13,11 @@ class History extends StatelessWidget {
     return Builder(
       builder: (context) => Scaffold(
         bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14,vertical: 22),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 22),
           child: Hero(
             tag: "Button",
             child: FlatButton(
-              onPressed: (){},
+              onPressed: () {},
               color: redColor,
               shape: cardShape,
               child: Container(
@@ -26,7 +25,8 @@ class History extends StatelessWidget {
                 child: Center(
                   child: Text(
                     'Delete All ',
-                    style: TextStyle(fontSize: fontSizeNormal),
+                    style:
+                        TextStyle(fontSize: fontSizeNormal, color: whiteColor),
                   ),
                 ),
               ),
@@ -41,7 +41,10 @@ class History extends StatelessWidget {
             return ListView.builder(
               itemCount: record.history.length,
               itemBuilder: (context, index) {
-                return Tile(record: record,index: index,);
+                return Tile(
+                  record: record,
+                  index: index,
+                );
               },
             );
           },
@@ -49,20 +52,19 @@ class History extends StatelessWidget {
       ),
     );
   }
-
-
 }
 
 class Tile extends StatefulWidget {
   final Data record;
   final int index;
-  Tile({this.record,this.index});
+
+  Tile({this.record, this.index});
+
   @override
   _TileState createState() => _TileState();
 }
 
 class _TileState extends State<Tile> {
-
   AlertDialog buildAlertDialog(BuildContext context, Data record, int index,
       BuildContext dialogContext) {
     return AlertDialog(
@@ -76,8 +78,8 @@ class _TileState extends State<Tile> {
               SnackBar(
                 backgroundColor: Theme.of(context).cardColor,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(9))
-                ),
+                    borderRadius:
+                        BorderRadius.vertical(top: Radius.circular(9))),
                 content: Text(
                   'Transaction Deleted',
                   style: TextStyle(color: whiteColor),
@@ -99,7 +101,8 @@ class _TileState extends State<Tile> {
   }
 
   static DateFormat _format = DateFormat("d MMM yyyy h:mm a (EE)");
-  var visible=0.0;
+  var visible = 0.0;
+
   @override
   Widget build(BuildContext context) {
     Record item = widget.record.history[widget.index];
@@ -111,19 +114,18 @@ class _TileState extends State<Tile> {
       children: <Widget>[
         Card(
           elevation: 4,
-          margin: EdgeInsets.only(left: 4,right: 4,top: 4),
+          margin: EdgeInsets.only(left: 4, right: 4, top: 4),
           child: ListTile(
             onTap: () {
-              visible=(visible==0.0)?70:0;
-              setState(() {
-
-              });
+              visible = (visible == 0.0) ? 70 : 0;
+              setState(() {});
             },
             leading: IconButton(
               icon: Icon(
                 Icons.attach_money,
                 color: color,
-              ), onPressed: ()=>null,
+              ),
+              onPressed: () => null,
             ),
             title: Text('$rupeeSign ${item.amount}'),
             subtitle: Text('Date: ${_format.format(date)}'),
@@ -150,12 +152,15 @@ class _TileState extends State<Tile> {
           curve: Curves.easeOutQuad,
           duration: Duration(milliseconds: 200),
           child: Card(
-            margin: EdgeInsets.only(left: 4,right: 4),
-            color: blueAccentColor,
+            margin: EdgeInsets.only(left: 4, right: 4),
+            color: Theme.of(context).accentColor,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(10),
-                child: Text('Remarks:${item.remarks}',),
+                child: Text(
+                  'Remarks:${item.remarks}',
+                  style: TextStyle(color: whiteColor),
+                ),
               ),
             ),
           ),

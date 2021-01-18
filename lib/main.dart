@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:newmoneytracker/Data/Data.dart';
 import 'package:newmoneytracker/Data/ThemeManager.dart';
 import 'package:newmoneytracker/Data/constants.dart';
@@ -14,7 +15,8 @@ import 'package:connectivity/connectivity.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(MyApp());
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+      .then((_) => runApp(MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -22,8 +24,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        FutureProvider.value(
-             value: SharedPreferences.getInstance()),
+        FutureProvider.value(value: SharedPreferences.getInstance()),
         StreamProvider<ConnectivityResult>.value(
             initialData: ConnectivityResult.none,
             value: Connectivity().onConnectivityChanged),
@@ -45,16 +46,21 @@ class MyApp extends StatelessWidget {
                 ),
               ),
             );
-          final _accentColor = value.getInt(sharedColorKey)==null?blueAccentColor:Color(value.getInt(sharedColorKey));
-          final _themeMode = value.getInt(sharedThemeModeKey)==null?ThemeMode.system:ThemeMode.values[value.getInt(sharedThemeModeKey)];
+          final _accentColor = value.getInt(sharedColorKey) == null
+              ? blueAccentColor
+              : Color(value.getInt(sharedColorKey));
+          final _themeMode = value.getInt(sharedThemeModeKey) == null
+              ? ThemeMode.system
+              : ThemeMode.values[value.getInt(sharedThemeModeKey)];
           return ChangeNotifierProvider(
             create: (BuildContext context) => ThemeManager(
               accentColor: _accentColor,
               themeMode: _themeMode,
             ),
             child: Consumer<ThemeManager>(
-              builder: (BuildContext context, value, Widget child) =>MaterialApp(
-                theme:value.lightTheme,
+              builder: (BuildContext context, value, Widget child) =>
+                  MaterialApp(
+                theme: value.lightTheme,
                 darkTheme: value.darkTheme,
                 themeMode: value.themeMode,
                 routes: {

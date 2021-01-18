@@ -66,7 +66,7 @@ class ThemeManager extends ChangeNotifier {
     );
     darkTheme=darkTheme.copyWith(
       accentColor: color,
-      appBarTheme: AppBarTheme(color: color),
+      // appBarTheme: AppBarTheme(color: color),
       toggleableActiveColor: color,
       cursorColor: color,
       inputDecorationTheme: InputDecorationTheme(

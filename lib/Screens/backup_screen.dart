@@ -49,7 +49,7 @@ class BackupButton extends StatelessWidget {
         child: Center(
           child: Text(
             'Backup',
-            style: TextStyle(fontSize: fontSizeNormal),
+            style: TextStyle(fontSize: fontSizeNormal,color: whiteColor),
           ),
         ),
       ),
@@ -73,7 +73,7 @@ class NetworkStatus extends StatelessWidget {
       height: 40,
       color: color,
       child: Center(
-        child: Text(status),
+        child: Text(status,style: TextStyle(color: whiteColor),),
       ),
     );
   }
