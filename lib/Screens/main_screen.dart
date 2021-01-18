@@ -1,4 +1,3 @@
-// import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Data.dart';
@@ -20,24 +19,7 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(appName),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.history),
-            onPressed: () {
-              Navigator.pushNamed(context, History.route);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.backup),
-            onPressed: () {
-              Navigator.pushNamed(context, BackupScreen.route);
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.format_paint),
-            onPressed: () {
-              Navigator.pushNamed(context, ThemeScreen.route);
-            },
-          ),
+          ThreeDotMenu(),
         ],
       ),
       body: MainScreen(),
@@ -45,24 +27,83 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatefulWidget {
+class ThreeDotMenu extends StatelessWidget {
+  const ThreeDotMenu({
+    Key key,
+  }) : super(key: key);
+
   @override
-  _MainScreenState createState() => _MainScreenState();
+  Widget build(BuildContext context) {
+    return PopupMenuButton(
+      onSelected: (value){
+        Navigator.pushNamed(context, value);
+      },
+      padding: EdgeInsets.zero,
+      itemBuilder: (context) => [
+        PopupMenuItem(
+          value: HistoryScreen.route,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical:15.0),
+            child: Row(
+              children: [
+                Icon(Icons.history),
+                const SizedBox(
+                  width: 20,
+                ),
+                Text("History"),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          value: BackupScreen.route,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical:15.0),
+            child: Row(
+              children: [
+                Icon(Icons.backup),
+                const SizedBox(
+                  width: 20,
+                ),
+                Text("Backup"),
+              ],
+            ),
+          ),
+        ),
+        PopupMenuItem(
+          value: ThemeScreen.route,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical:15.0),
+            child: Row(
+              children: [
+                Icon(Icons.format_paint),
+                const SizedBox(
+                  width: 20,
+                ),
+                Text("Theme"),
+              ],
+            ),
+          ),
+          // ListTile(
+          //   onTap: () {
+          //     Navigator.pushNamed(context, ThemeScreen.route);
+          //   },
+          //   contentPadding: EdgeInsets.zero,
+          //   leading: Icon(Icons.format_paint),
+          //   title: Text("Theme"),
+          // ),
+        ),
+      ],
+    );
+  }
 }
 
-class _MainScreenState extends State<MainScreen> {
-  Future<FirebaseApp> _initialiseFlutterApp;
-
-  @override
-  void initState() {
-    _initialiseFlutterApp = Firebase.initializeApp();
-    super.initState();
-  }
+class MainScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-      future: _initialiseFlutterApp,
+      future: Firebase.initializeApp(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.done)
           return MainScreenUI();
@@ -104,19 +145,16 @@ class _MainScreenUIState extends State<MainScreenUI> {
     super.initState();
   }
 
-  final List<Widget> mainColumnWidgets = [];
-
   @override
   Widget build(BuildContext context) {
+    final normalTextStyle = TextStyle(
+      fontSize: fontSizeNormal,
+      color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.7),
+    );
     return FutureBuilder(
         future: _login,
         builder: (context, snapshot) {
-          final normalTextStyle=TextStyle(
-            fontSize: fontSizeNormal,
-            color: Theme.of(context)
-                .textTheme
-                .bodyText1
-                .color.withOpacity(0.7),);
+
           if (snapshot.connectionState == ConnectionState.done)
             return FutureBuilder(
               future: _loadDataFromDisk,
@@ -125,7 +163,6 @@ class _MainScreenUIState extends State<MainScreenUI> {
                   if (snapshot.data == true)
                     return Builder(
                       builder: (context) {
-
                         return Container(
                           margin: const EdgeInsets.all(10),
                           child: Column(
@@ -176,11 +213,13 @@ class _MainScreenUIState extends State<MainScreenUI> {
                                                 child: Text(
                                                   'Yesterday',
                                                   style: TextStyle(
-                                                      fontSize: fontSizeNormal,
-                                                      color: Theme.of(context)
-                                                          .textTheme
-                                                          .bodyText1
-                                                          .color.withOpacity(0.7),),
+                                                    fontSize: fontSizeNormal,
+                                                    color: Theme.of(context)
+                                                        .textTheme
+                                                        .bodyText1
+                                                        .color
+                                                        .withOpacity(0.7),
+                                                  ),
                                                 ),
                                               ),
                                               Flexible(
@@ -339,12 +378,10 @@ class _BottomSheetColumnState extends State<BottomSheetColumn> {
 
   @override
   Widget build(BuildContext context) {
-    final normalTextStyle=TextStyle(
+    final normalTextStyle = TextStyle(
       fontSize: fontSizeNormal,
-      color: Theme.of(context)
-          .textTheme
-          .bodyText1
-          .color.withOpacity(0.7),);
+      color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.7),
+    );
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
@@ -430,9 +467,8 @@ class ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final normalTextStyle=TextStyle(
-      fontSize: fontSizeNormal,
-      color:whiteColor);
+    final normalTextStyle =
+        TextStyle(fontSize: fontSizeNormal, color: whiteColor);
     return Expanded(
       child: FlatButton(
         onPressed: function,

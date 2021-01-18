@@ -64,7 +64,7 @@ class MyApp extends StatelessWidget {
                 darkTheme: value.darkTheme,
                 themeMode: value.themeMode,
                 routes: {
-                  History.route: (context) => History(),
+                  HistoryScreen.route: (context) => HistoryScreen(),
                   HomeScreen.route: (context) => HomeScreen(),
                   BackupScreen.route: (context) => BackupScreen(),
                   ThemeScreen.route: (context) => ThemeScreen(),

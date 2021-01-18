@@ -5,7 +5,7 @@ import 'package:newmoneytracker/Data/MoneyRecord.dart';
 import 'package:newmoneytracker/Data/constants.dart';
 import 'package:provider/provider.dart';
 
-class History extends StatelessWidget {
+class HistoryScreen extends StatelessWidget {
   static const String route = 'history';
 
   @override
