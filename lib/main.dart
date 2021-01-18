@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Data.dart';
+import 'package:newmoneytracker/Data/ThemeManager.dart';
 import 'package:newmoneytracker/Screens/backup_screen.dart';
 import 'package:newmoneytracker/Screens/history.dart';
+import 'package:newmoneytracker/Screens/theme_screen.dart';
 import 'package:provider/provider.dart';
 import './Data/User.dart';
-import 'Data/constants.dart';
+import 'Data/Themes.dart';
+
+// import 'Data/constants.dart';
 import 'Screens/main_screen.dart';
 import 'package:connectivity/connectivity.dart';
 
@@ -29,26 +33,25 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => UserData(),
         ),
       ],
-      child: MaterialApp(
-        theme: ThemeData.dark().copyWith(
-          accentColor: accentColor,
-          cursorColor: accentColor,
-          inputDecorationTheme: InputDecorationTheme(
-            enabledBorder: UnderlineInputBorder(
-              borderSide: BorderSide(
-                color: accentColor.withOpacity(0.6),
-                width: 2,
-                style: BorderStyle.solid,
-              ),
+      child: Consumer<ThemeManager>(
+        builder: (BuildContext context, value, Widget child) =>StreamProvider<ThemeData>.value(
+          initialData: initialTheme,
+          value: Provider.of<ThemeManager>(context).theme,
+          child: Consumer<ThemeData>(
+            builder: (BuildContext context, value, Widget child)=>MaterialApp(
+              theme: ThemeData.light(),
+              // themeMode: ,
+              darkTheme: ThemeData.dark(),
+              routes: {
+                History.route: (context) => History(),
+                HomeScreen.route: (context) => HomeScreen(),
+                BackupScreen.route: (context) => BackupScreen(),
+                ThemeScreen.route: (context) => ThemeScreen(),
+              },
+              initialRoute: HomeScreen.route,
             ),
           ),
         ),
-        routes: {
-          History.route: (context) => History(),
-          HomeScreen.route: (context) => HomeScreen(),
-          BackupScreen.route:(context)=>BackupScreen(),
-        },
-        initialRoute: HomeScreen.route,
       ),
     );
   }

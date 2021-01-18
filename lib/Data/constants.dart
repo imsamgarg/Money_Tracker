@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 
-final Color accentColor = Colors.blueAccent[400];
+final Color blueAccentColor = Colors.blueAccent[400];
+final Color normalBlueAccentColor = Colors.blue[400];
+final Color redAccentColor = Colors.redAccent[400];
+final Color normalRedAccentColor = Colors.red[400];
+final Color purpleAccentColor = Colors.purpleAccent[400];
+final Color deepPurpleAccentColor = Colors.deepPurpleAccent[400];
+final Color orangeAccentColor = Colors.orangeAccent[400];
+final Color deepOrangeAccentColor = Colors.deepOrangeAccent[400];
+// final Color deepAccentColor = Colors.deepOrangeAccent[400];
+final Color greenAccentColor = Colors.greenAccent[400];
 final Color greenColor = Colors.green[400];
 final Color redColor = Colors.red[400];
 const Color whiteColor = Colors.white;
+
+
+
 const String appName = 'MoneyTracker';
 const String balance = 'Balance';
 const String lastRecord = 'Last Record';
