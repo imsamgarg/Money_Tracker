@@ -1,32 +1,102 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:newmoneytracker/Data/Themes.dart';
-import 'package:provider/provider.dart';
-// import 'constants.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class ThemeManager {
-  final StreamController<ThemeData> _themeController=StreamController<ThemeData>();
+import 'constants.dart';
 
-  Future changeTheme(int themeIndex)async{
-    ThemeData newTheme=_themes[themeIndex];
-    // Theme.of(context).copyWith(accentColor: );
-    _themeController.sink.add(newTheme);
+class ThemeManager extends ChangeNotifier {
+  final Color accentColor;
+  ThemeData lightTheme = ThemeData.light();
+  ThemeData darkTheme = ThemeData.dark();
+  ThemeMode themeMode;
+
+  ThemeManager({this.themeMode, this.accentColor})
+      : lightTheme = ThemeData.light().copyWith(
+          accentColor: accentColor,
+          cursorColor: accentColor,
+          appBarTheme: AppBarTheme(color: accentColor),
+          toggleableActiveColor: accentColor,
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: accentColor.withOpacity(0.6),
+                width: 2,
+                style: BorderStyle.solid,
+              ),
+            ),
+          ),
+        ),
+        darkTheme = ThemeData.dark().copyWith(
+          accentColor: accentColor,
+          toggleableActiveColor: accentColor,
+          cursorColor: accentColor,
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(
+                color: accentColor.withOpacity(0.6),
+                width: 2,
+                style: BorderStyle.solid,
+              ),
+            ),
+          ),
+        );
+
+  Future<bool> changeAccentColor(
+      Color color, SharedPreferences sharedPreferences) async {
+   lightTheme= lightTheme.copyWith(
+      accentColor: color,
+     appBarTheme: AppBarTheme(color: color),
+     toggleableActiveColor: color,
+      cursorColor: color,
+      inputDecorationTheme: InputDecorationTheme(
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: color.withOpacity(0.6),
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+        ),
+      ),
+    );
+    darkTheme=darkTheme.copyWith(
+      accentColor: color,
+      appBarTheme: AppBarTheme(color: color),
+      toggleableActiveColor: color,
+      cursorColor: color,
+      inputDecorationTheme: InputDecorationTheme(
+        enabledBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: color.withOpacity(0.6),
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+        ),
+      ),
+    );
+    try {
+      bool temp = await sharedPreferences.setInt(sharedColorKey, color.value);
+      if (temp) {
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      throw (e);
+    }
   }
 
-  Future changeToThemeLight(int index)async{
-    ThemeData _themeData=ThemeData();
+  Future<bool> changeThemeMode(
+      ThemeMode themeMode, SharedPreferences sharedPreferences) async {
+    try {
+      bool temp =
+          await sharedPreferences.setInt(sharedThemeModeKey, themeMode.index);
+      if (temp) {
+        this.themeMode = themeMode;
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      throw (e);
+    }
   }
-  final List _themes=[
-    theme1,
-    theme2,
-    theme3,
-    theme4,
-    theme5,
-    theme6,
-    theme7,
-    theme8,
-  ];
-
-  Stream<ThemeData> get theme => _themeController.stream;
-
 }

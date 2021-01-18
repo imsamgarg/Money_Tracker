@@ -14,15 +14,19 @@ final Color greenColor = Colors.green[400];
 final Color redColor = Colors.red[400];
 const Color whiteColor = Colors.white;
 
+//Preferenced Keys
+
+const String sharedDateKey="last_backup_date";
+const String sharedColorKey="accent_color";
+const String sharedThemeModeKey="theme_mode";
 
 
 const String appName = 'MoneyTracker';
 const String balance = 'Balance';
 const String lastRecord = 'Last Record';
-final String rupeeSign = String.fromCharCode(0x20B9);
 
+final String rupeeSign = String.fromCharCode(0x20B9);
 const String collectionName="Record";
-const String sharedDateKey="last_backup_date";
 
 const double fontSizeNormal = 24;
 const double headingFontSize = 35;
