@@ -44,8 +44,7 @@ const Widget paddingWidget=const SizedBox(
   height: 10,
 );
 
-final TextStyle normalTextStyle = TextStyle(
-    fontSize: fontSizeNormal,
-    color: whiteColor.withOpacity(0.8)
-);
+// final TextStyle normalTextStyle = TextStyle(
+//     fontSize: fontSizeNormal,
+// );
 //const BorderRadius cardBorderRadius = BorderRadius.all(Radius.circular(9));

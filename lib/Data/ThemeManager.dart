@@ -48,10 +48,17 @@ class ThemeManager extends ChangeNotifier {
      toggleableActiveColor: color,
       cursorColor: color,
       inputDecorationTheme: InputDecorationTheme(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: color,
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+        ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
             color: color.withOpacity(0.6),
-            width: 2,
+            width: 1,
             style: BorderStyle.solid,
           ),
         ),
@@ -63,10 +70,17 @@ class ThemeManager extends ChangeNotifier {
       toggleableActiveColor: color,
       cursorColor: color,
       inputDecorationTheme: InputDecorationTheme(
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+            color: color,
+            width: 2,
+            style: BorderStyle.solid,
+          ),
+        ),
         enabledBorder: UnderlineInputBorder(
           borderSide: BorderSide(
             color: color.withOpacity(0.6),
-            width: 2,
+            width: 1,
             style: BorderStyle.solid,
           ),
         ),
