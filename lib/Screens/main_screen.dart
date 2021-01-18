@@ -35,7 +35,7 @@ class ThreeDotMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton(
-      onSelected: (value){
+      onSelected: (value) {
         Navigator.pushNamed(context, value);
       },
       padding: EdgeInsets.zero,
@@ -43,7 +43,7 @@ class ThreeDotMenu extends StatelessWidget {
         PopupMenuItem(
           value: HistoryScreen.route,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical:15.0),
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Row(
               children: [
                 Icon(Icons.history),
@@ -58,7 +58,7 @@ class ThreeDotMenu extends StatelessWidget {
         PopupMenuItem(
           value: BackupScreen.route,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical:15.0),
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Row(
               children: [
                 Icon(Icons.backup),
@@ -73,7 +73,7 @@ class ThreeDotMenu extends StatelessWidget {
         PopupMenuItem(
           value: ThemeScreen.route,
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical:15.0),
+            padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Row(
               children: [
                 Icon(Icons.format_paint),
@@ -98,34 +98,15 @@ class ThreeDotMenu extends StatelessWidget {
   }
 }
 
-class MainScreen extends StatelessWidget {
-
+class MainScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: Firebase.initializeApp(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.done)
-          return MainScreenUI();
-        if (snapshot.hasError)
-          return Center(
-            child: Text("Something Went Wrong"),
-          );
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-  }
+  _MainScreenState createState() => _MainScreenState();
 }
 
-class MainScreenUI extends StatefulWidget {
-  @override
-  _MainScreenUIState createState() => _MainScreenUIState();
-}
+class _MainScreenState extends State<MainScreen> {
 
-class _MainScreenUIState extends State<MainScreenUI> {
-  Future<bool> _login;
+  Future<FirebaseApp> _initiate;
+
   Future<bool> _loadDataFromDisk;
 
   Future<bool> fetchData() async {
@@ -140,11 +121,10 @@ class _MainScreenUIState extends State<MainScreenUI> {
   @override
   void initState() {
     _loadDataFromDisk = fetchData();
-    _login = context.read<UserData>().login();
+    _initiate=Firebase.initializeApp();
     // TODO: implement initState
     super.initState();
   }
-
   @override
   Widget build(BuildContext context) {
     final normalTextStyle = TextStyle(
@@ -152,177 +132,171 @@ class _MainScreenUIState extends State<MainScreenUI> {
       color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.7),
     );
     return FutureBuilder(
-        future: _login,
-        builder: (context, snapshot) {
-
-          if (snapshot.connectionState == ConnectionState.done)
-            return FutureBuilder(
-              future: _loadDataFromDisk,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  if (snapshot.data == true)
-                    return Builder(
-                      builder: (context) {
-                        return Container(
-                          margin: const EdgeInsets.all(10),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              //Heading
-                              Expanded(
-                                flex: 3,
-                                child: Card(
-                                  shape: cardShape,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 20),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Container(
-                                            child: Text(
-                                              balance,
-                                              style: normalTextStyle,
-                                            ),
-                                          ),
-                                        ),
-                                        Flexible(
-                                          child: BalanceText(),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              paddingWidget,
-                              //Balance
-                              Expanded(
-                                flex: 3,
-                                child: Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Card(
-                                        shape: cardShape,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Text(
-                                                  'Yesterday',
-                                                  style: TextStyle(
-                                                    fontSize: fontSizeNormal,
-                                                    color: Theme.of(context)
-                                                        .textTheme
-                                                        .bodyText1
-                                                        .color
-                                                        .withOpacity(0.7),
-                                                  ),
-                                                ),
-                                              ),
-                                              Flexible(
-                                                  child: YesterdayDataRow()),
-                                            ],
+      future: _initiate,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done)
+          return FutureBuilder(
+            future: _loadDataFromDisk,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                if (snapshot.data == true)
+                  return Builder(
+                    builder: (context) {
+                      return Container(
+                        margin: const EdgeInsets.all(10),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            //Heading
+                            Expanded(
+                              flex: 3,
+                              child: Card(
+                                shape: cardShape,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Container(
+                                          child: Text(
+                                            balance,
+                                            style: normalTextStyle,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(
-                                      width: 13,
-                                    ),
-                                    Expanded(
-                                      child: Card(
-                                        shape: cardShape,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            children: <Widget>[
-                                              Expanded(
-                                                child: Text(
-                                                  'This Week',
-                                                  style: normalTextStyle,
-                                                ),
-                                              ),
-                                              Flexible(
-                                                  child:
-                                                      LastSevenDaysDataRow()),
-                                            ],
-                                          ),
-                                        ),
+                                      Flexible(
+                                        child: BalanceText(),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              paddingWidget,
-                              //Yesterday and last 7 days
-                              Expanded(
-                                flex: 3,
-                                child: Card(
-                                  shape: cardShape,
-                                  child: Container(
-                                    margin: EdgeInsets.only(left: 20),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Expanded(
-                                          child: Container(
-                                            child: Text(
-                                              lastRecord,
-                                              style: normalTextStyle,
-                                            ),
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            child: LastRecordText(),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                    ],
                                   ),
                                 ),
                               ),
-                              paddingWidget,
-                              //Last Record
-                              Padding(
-                                padding: const EdgeInsets.all(4),
-                                child: NewTransactionButton(),
+                            ),
+                            paddingWidget,
+                            //Balance
+                            Expanded(
+                              flex: 3,
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Card(
+                                      shape: cardShape,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Text(
+                                                'Yesterday',
+                                                style: TextStyle(
+                                                  fontSize: fontSizeNormal,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .bodyText1
+                                                      .color
+                                                      .withOpacity(0.7),
+                                                ),
+                                              ),
+                                            ),
+                                            Flexible(child: YesterdayDataRow()),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 13,
+                                  ),
+                                  Expanded(
+                                    child: Card(
+                                      shape: cardShape,
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Expanded(
+                                              child: Text(
+                                                'This Week',
+                                                style: normalTextStyle,
+                                              ),
+                                            ),
+                                            Flexible(child: LastSevenDaysDataRow()),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              paddingWidget,
-                              //Button
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  else
-                    return Center(
-                      child: Text(
-                        'Permission Denied',
-                        style: normalTextStyle,
-                      ),
-                    );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
+                            ),
+                            paddingWidget,
+                            //Yesterday and last 7 days
+                            Expanded(
+                              flex: 3,
+                              child: Card(
+                                shape: cardShape,
+                                child: Container(
+                                  margin: EdgeInsets.only(left: 20),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: <Widget>[
+                                      Expanded(
+                                        child: Container(
+                                          child: Text(
+                                            lastRecord,
+                                            style: normalTextStyle,
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Container(
+                                          child: LastRecordText(),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            paddingWidget,
+                            //Last Record
+                            Padding(
+                              padding: const EdgeInsets.all(4),
+                              child: NewTransactionButton(),
+                            ),
+                            paddingWidget,
+                            //Button
+                          ],
+                        ),
+                      );
+                    },
                   );
-                }
-              },
-            );
-          if (snapshot.hasError)
-            return Center(
-              child: Text("Login Failed"),
-            );
-          return Center(
-            child: CircularProgressIndicator(),
+                else
+                  return Center(
+                    child: Text(
+                      'Permission Denied',
+                      style: normalTextStyle,
+                    ),
+                  );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
           );
-        });
+        if (snapshot.hasError)
+          return Center(
+            child: Text("Something Went Wrong"),
+          );
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
   }
 }
 
