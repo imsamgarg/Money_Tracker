@@ -151,7 +151,7 @@ class _TileState extends State<Tile> {
           duration: Duration(milliseconds: 200),
           child: Card(
             margin: EdgeInsets.only(left: 4,right: 4),
-            color: accentColor,
+            color: blueAccentColor,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(10),

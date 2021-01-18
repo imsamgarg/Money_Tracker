@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-// import 'package:googleapis/bigtableadmin/v2.dart';
 import 'package:newmoneytracker/Data/Data.dart';
 import 'package:newmoneytracker/Screens/backup_screen.dart';
 import 'package:newmoneytracker/Screens/history.dart';
@@ -7,7 +6,7 @@ import 'package:provider/provider.dart';
 import './Data/User.dart';
 import 'Data/constants.dart';
 import 'Screens/main_screen.dart';
-
+import 'package:connectivity/connectivity.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +18,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        Provider.value(value: ThemeManager()),
+        StreamProvider<ConnectivityResult>.value(
+            initialData: ConnectivityResult.none,
+            value: Connectivity().onConnectivityChanged),
         ChangeNotifierProvider(
           create: (BuildContext context) => Data(),
         ),

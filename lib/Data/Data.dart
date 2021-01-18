@@ -28,7 +28,7 @@ class Data extends ChangeNotifier {
         stringFile = file.readAsStringSync();
         if(stringFile=='')
           {
-            _record = MoneyRecord(balance: null, record: List());
+            _record = MoneyRecord(balance: null, record: []);
             notifyListeners();
           }
         else {
@@ -38,7 +38,7 @@ class Data extends ChangeNotifier {
       } else {
         Directory('$path/Money Tracker/').createSync();
         file.writeAsStringSync('');
-        _record = MoneyRecord(balance: null, record: List());
+        _record = MoneyRecord(balance: null, record: []);
       }
     } on FileSystemException catch (e) {
       print(e);
@@ -69,7 +69,7 @@ class Data extends ChangeNotifier {
     if(_record.record.length==1)
       {
         _record.balance=null;
-        _record.record=List();
+        _record.record=[];
       }
     else {
       print(_record.balance);

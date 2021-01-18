@@ -1,8 +1,10 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Data.dart';
 import 'package:newmoneytracker/Data/User.dart';
 import 'package:newmoneytracker/Screens/backup_screen.dart';
+import 'package:newmoneytracker/Screens/theme_screen.dart';
 import '../Widgets/main_screen_widgets.dart';
 import 'package:newmoneytracker/Data/constants.dart';
 import 'package:newmoneytracker/Screens/history.dart';
@@ -28,6 +30,12 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(Icons.backup),
             onPressed: () {
               Navigator.pushNamed(context, BackupScreen.route);
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.format_paint),
+            onPressed: () {
+              Navigator.pushNamed(context, ThemeScreen.route);
             },
           ),
         ],
@@ -101,12 +109,7 @@ class _MainScreenUIState extends State<MainScreenUI> {
     super.initState();
   }
   final List<Widget> mainColumnWidgets = [
-    Flexible(
-      child: Center(
-        child: HeadingWidget(),
-      ),
-    ),
-    paddingWidget,
+
     //Heading
     Expanded(
       flex: 3,
@@ -294,7 +297,7 @@ class NewTransactionButton extends StatelessWidget {
       tag: "Button",
       child: FlatButton(
         onPressed: () => _showBottomSheet(context),
-        color: accentColor,
+        color: Theme.of(context).accentColor,
         shape: cardShape,
         child: Container(
           height: 55,
@@ -415,7 +418,7 @@ class ActionButton extends StatelessWidget {
       child: FlatButton(
         onPressed: function,
         shape: cardShape,
-        color: accentColor,
+        color: Theme.of(context).accentColor,
         child: Center(
           child: Text(
             text,
