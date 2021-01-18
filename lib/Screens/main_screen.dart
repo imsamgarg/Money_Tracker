@@ -1,7 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Data.dart';
-import 'package:newmoneytracker/Data/User.dart';
 import 'package:newmoneytracker/Screens/backup_screen.dart';
 import 'package:newmoneytracker/Screens/theme_screen.dart';
 import '../Widgets/main_screen_widgets.dart';
@@ -46,7 +45,10 @@ class ThreeDotMenu extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Row(
               children: [
-                Icon(Icons.history),
+                Icon(
+                  Icons.history,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                ),
                 const SizedBox(
                   width: 20,
                 ),
@@ -61,7 +63,10 @@ class ThreeDotMenu extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Row(
               children: [
-                Icon(Icons.backup),
+                Icon(
+                  Icons.backup,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                ),
                 const SizedBox(
                   width: 20,
                 ),
@@ -76,7 +81,10 @@ class ThreeDotMenu extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 15.0),
             child: Row(
               children: [
-                Icon(Icons.format_paint),
+                Icon(
+                  Icons.format_paint,
+                  color: Theme.of(context).textTheme.bodyText1.color,
+                ),
                 const SizedBox(
                   width: 20,
                 ),
@@ -104,7 +112,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-
   Future<FirebaseApp> _initiate;
 
   Future<bool> _loadDataFromDisk;
@@ -121,10 +128,11 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     _loadDataFromDisk = fetchData();
-    _initiate=Firebase.initializeApp();
+    _initiate = Firebase.initializeApp();
     // TODO: implement initState
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final normalTextStyle = TextStyle(
@@ -149,6 +157,14 @@ class _MainScreenState extends State<MainScreen> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             //Heading
+                            Flexible(
+                              child: Center(
+                                  child: Text(
+                                "Welcome",
+                                style: TextStyle(fontSize: headingFontSize),
+                              )),
+                            ),
+                            paddingWidget,
                             Expanded(
                               flex: 3,
                               child: Card(
@@ -215,7 +231,8 @@ class _MainScreenState extends State<MainScreen> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
                                           children: <Widget>[
                                             Expanded(
                                               child: Text(
@@ -223,7 +240,8 @@ class _MainScreenState extends State<MainScreen> {
                                                 style: normalTextStyle,
                                               ),
                                             ),
-                                            Flexible(child: LastSevenDaysDataRow()),
+                                            Flexible(
+                                                child: LastSevenDaysDataRow()),
                                           ],
                                         ),
                                       ),
