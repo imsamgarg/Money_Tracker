@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:newmoneytracker/Data/Backup.dart';
 import 'package:newmoneytracker/Data/Data.dart';
 import 'package:newmoneytracker/Data/ThemeManager.dart';
 import 'package:newmoneytracker/Data/constants.dart';
@@ -33,6 +34,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (BuildContext context) => UserData(),
+        ),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => Backup(),
         ),
       ],
       child: Consumer<SharedPreferences>(

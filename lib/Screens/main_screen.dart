@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Home");
     return Scaffold(
       appBar: AppBar(
         title: Text(appName),
@@ -135,6 +136,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Main Screen");
     final normalTextStyle = TextStyle(
       fontSize: fontSizeNormal,
       color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.7),

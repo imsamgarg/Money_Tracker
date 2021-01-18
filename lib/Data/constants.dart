@@ -26,7 +26,9 @@ const String balance = 'Balance';
 const String lastRecord = 'Last Record';
 
 final String rupeeSign = String.fromCharCode(0x20B9);
-const String collectionName="Record";
+const String recordCollectionName="Record";
+const String lastDateCollectionName="LastDate";
+const String lastDateKey="lastDate";
 
 const double fontSizeNormal = 24;
 const double headingFontSize = 35;

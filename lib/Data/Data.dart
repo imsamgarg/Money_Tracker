@@ -11,7 +11,10 @@ class Data extends ChangeNotifier {
   static Record _transactionRecord;
   static DateTime _dateTime ;
 
-  _saveData() async {
+  MoneyRecord get getFullRecord => _record;
+
+
+  saveData() async {
     String data = json.encode(_record.toJson());
     final path = await ExtStorage.getExternalStorageDirectory();
     File('$path/Money Tracker/data.json').writeAsStringSync(data);
@@ -49,7 +52,7 @@ class Data extends ChangeNotifier {
   _updateTotalBalance(double amount) {
     print('fuck man $amount');
     _record.balance = (_record.balance ?? 0) + amount;
-    _saveData();
+    saveData();
   }
 
   addTransaction(double amount, String remarks) {
@@ -77,7 +80,7 @@ class Data extends ChangeNotifier {
       print(_record.balance);
       _record.record.removeAt(index);
     }
-      _saveData();
+      saveData();
       notifyListeners();
   }
 

@@ -6,7 +6,23 @@ class UserData extends ChangeNotifier {
   User _user;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
-  String get userName => _user.displayName;
+  String get userName {
+    if (_user != null) return _user.displayName;
+    return "Not Logged";
+  }
+
+  String get userId =>_user.uid;
+
+  bool get isUserLogged {
+    if(_user!=null)return true;
+    return false;
+  }
+
+  String get email {
+    if(_user!=null)
+      return _user.email;
+    return "";
+  }
 
   Future<bool> _loginUser() async {
     try {
@@ -35,12 +51,21 @@ class UserData extends ChangeNotifier {
     } else {
       try {
         await _loginUser();
+        notifyListeners();
         return true;
       } catch (e) {
         throw e;
       }
     }
   }
-
-
+  Future<bool> logout()async{
+    try {
+      _firebaseAuth.signOut();
+      _user=null;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      throw e;
+    }
+  }
 }
