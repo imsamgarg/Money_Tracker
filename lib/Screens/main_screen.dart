@@ -144,6 +144,10 @@ class _MainScreenState extends State<MainScreen> {
     return FutureBuilder(
       future: _initiate,
       builder: (context, snapshot) {
+        if (snapshot.hasError)
+          return Center(
+            child: Text("Something Went Wrong"),
+          );
         if (snapshot.connectionState == ConnectionState.done)
           return FutureBuilder(
             future: _loadDataFromDisk,
@@ -308,10 +312,7 @@ class _MainScreenState extends State<MainScreen> {
               }
             },
           );
-        if (snapshot.hasError)
-          return Center(
-            child: Text("Something Went Wrong"),
-          );
+
         return Center(
           child: CircularProgressIndicator(),
         );
