@@ -11,6 +11,7 @@ class ThemeManager extends ChangeNotifier {
   ThemeManager({this.themeMode, this.accentColor})
       : lightTheme = ThemeData.light().copyWith(
           accentColor: accentColor,
+          textSelectionHandleColor: accentColor,
           cursorColor: accentColor,
           appBarTheme: AppBarTheme(color: accentColor),
           toggleableActiveColor: accentColor,
@@ -26,6 +27,7 @@ class ThemeManager extends ChangeNotifier {
         ),
         darkTheme = ThemeData.dark().copyWith(
           accentColor: accentColor,
+          textSelectionHandleColor: accentColor,
           toggleableActiveColor: accentColor,
           cursorColor: accentColor,
           inputDecorationTheme: InputDecorationTheme(
@@ -43,6 +45,7 @@ class ThemeManager extends ChangeNotifier {
       Color color, SharedPreferences sharedPreferences) async {
     lightTheme = lightTheme.copyWith(
       accentColor: color,
+      textSelectionHandleColor: color,
       appBarTheme: AppBarTheme(color: color),
       toggleableActiveColor: color,
       cursorColor: color,
@@ -69,6 +72,7 @@ class ThemeManager extends ChangeNotifier {
       // appBarTheme: AppBarTheme(color: color),
       toggleableActiveColor: color,
       cursorColor: color,
+      textSelectionHandleColor: color,
       inputDecorationTheme: InputDecorationTheme(
         focusedBorder: UnderlineInputBorder(
           borderSide: BorderSide(
