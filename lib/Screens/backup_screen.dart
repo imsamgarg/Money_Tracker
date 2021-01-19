@@ -6,133 +6,144 @@ import 'package:newmoneytracker/Data/Data.dart';
 import 'package:newmoneytracker/Data/User.dart';
 import 'package:newmoneytracker/Data/constants.dart';
 import 'package:provider/provider.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 
 class BackupScreen extends StatelessWidget {
   static const String route = 'backup_screen';
 
   @override
   Widget build(BuildContext context) {
-    // final size = MediaQuery.of(context).size;
     final userData = Provider.of<UserData>(context);
     final backup = Provider.of<Backup>(context);
-    // String text;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Backup"),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 22),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
+
+    return MultiProvider(
+      providers: [
+        StreamProvider<ConnectivityResult>.value(
+            initialData: ConnectivityResult.none,
+            value: Connectivity().onConnectivityChanged),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => UserData(),
+        ),
+        ChangeNotifierProvider(
+          create: (BuildContext context) => Backup(),
+        ),
+      ],
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text("Backup"),
+        ),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 22),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              RestoreButton(),
+              const SizedBox(
+                height: 15,
+              ),
+              Hero(
+                tag: "Button",
+                child: BackupButton(),
+              ),
+            ],
+          ),
+        ),
+        body: Column(
           children: [
-            RestoreButton(),
-            const SizedBox(
-              height: 15,
+            NetworkStatus(),
+            Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Text(
+                "Backup",
+                style: TextStyle(fontSize: 21),
+              ),
             ),
-            Hero(
-              tag: "Button",
-              child: BackupButton(),
+            Card(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Cell(
+                          text: "User Name",
+                          coloredText: false,
+                        ),
+                        Cell(
+                          coloredText: true,
+                          text: userData.userName,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Cell(
+                          text: "Email",
+                          coloredText: false,
+                        ),
+                        (!userData.isUserLogged)
+                            ? LoginButton(
+                                text: "login",
+                                function: () {
+                                  userData
+                                      .login()
+                                      .then((value) => print(value))
+                                      .catchError((onError) => print(onError));
+                                },
+                              )
+                            : Cell(
+                                text: userData.email,
+                                coloredText: true,
+                              ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      // mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Cell(text: "Last Backup"),
+                        Cell(
+                          coloredText: true,
+                          text: backup.lastBackupDate,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Cell(text: ""),
+                (userData.isUserLogged)
+                    ? Padding(
+                        padding: const EdgeInsets.only(right: 4.0),
+                        child: LoginButton(
+                          text: "Logout",
+                          function: () {
+                            userData
+                                .logout()
+                                .then((value) => print(value))
+                                .catchError((onError) => print(onError));
+                          },
+                        ),
+                      )
+                    : SizedBox(),
+              ],
             ),
           ],
         ),
-      ),
-      body: Column(
-        children: [
-          NetworkStatus(),
-          Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Text(
-              "Backup",
-              style: TextStyle(fontSize: 21),
-            ),
-          ),
-          Card(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Cell(
-                        text: "User Name",
-                        coloredText: false,
-                      ),
-                      Cell(
-                        coloredText: true,
-                        text: userData.userName,
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Cell(
-                        text: "Email",
-                        coloredText: false,
-                      ),
-                      (!userData.isUserLogged)
-                          ? LoginButton(
-                              text: "login",
-                              function: () {
-                                userData
-                                    .login()
-                                    .then((value) => print(value))
-                                    .catchError((onError) => print(onError));
-                              },
-                            )
-                          : Cell(
-                              text: userData.email,
-                              coloredText: true,
-                            ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.max,
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Cell(text: "Last Backup"),
-                      Cell(
-                        coloredText: true,
-                        text: backup.lastBackupDate,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Cell(text: ""),
-              (userData.isUserLogged)
-                  ? Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: LoginButton(
-                        text: "Logout",
-                        function: () {
-                          userData
-                              .logout()
-                              .then((value) => print(value))
-                              .catchError((onError) => print(onError));
-                        },
-                      ),
-                    )
-                  : SizedBox(),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -179,17 +190,19 @@ class RestoreButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer4<ConnectivityResult,Backup,UserData,Data>(
-      builder: (BuildContext context, value,b,u,d, Widget child) {
+    return Consumer4<ConnectivityResult, Backup, UserData, Data>(
+      builder: (BuildContext context, value, b, u, d, Widget child) {
         ConnectivityResult network = context.watch<ConnectivityResult>();
         bool isConnected = network == ConnectivityResult.none ? false : true;
         return OutlineButton(
-          onPressed: isConnected ? () {
-            b
-                .performRestore(u.userId)
-                .then((value) => print(value))
-                .catchError((onError) => print(onError));
-          } : null,
+          onPressed: isConnected
+              ? () {
+                  b
+                      .performRestore(u.userId)
+                      .then((value) => print(value))
+                      .catchError((onError) => print(onError));
+                }
+              : null,
           borderSide:
               BorderSide(color: Theme.of(context).accentColor, width: 1),
           shape: cardShape,

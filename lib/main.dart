@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:newmoneytracker/Data/Backup.dart';
 import 'package:newmoneytracker/Data/Data.dart';
 import 'package:newmoneytracker/Data/ThemeManager.dart';
 import 'package:newmoneytracker/Data/constants.dart';
@@ -10,9 +9,7 @@ import 'package:newmoneytracker/Screens/history.dart';
 import 'package:newmoneytracker/Screens/theme_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import './Data/User.dart';
 import 'Screens/main_screen.dart';
-import 'package:connectivity/connectivity.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,18 +23,11 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         FutureProvider.value(value: SharedPreferences.getInstance()),
-        StreamProvider<ConnectivityResult>.value(
-            initialData: ConnectivityResult.none,
-            value: Connectivity().onConnectivityChanged),
+
         ChangeNotifierProvider(
           create: (BuildContext context) => Data(),
         ),
-        ChangeNotifierProvider(
-          create: (BuildContext context) => UserData(),
-        ),
-        ChangeNotifierProvider(
-          create: (BuildContext context) => Backup(),
-        ),
+
       ],
       child: Consumer<SharedPreferences>(
         builder: (context, value, child) {
