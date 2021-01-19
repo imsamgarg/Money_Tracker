@@ -15,9 +15,23 @@ class Data extends ChangeNotifier {
 
 
   saveData() async {
-    String data = json.encode(_record.toJson());
-    final path = await ExtStorage.getExternalStorageDirectory();
-    File('$path/Money Tracker/data.json').writeAsStringSync(data);
+    try {
+      String data = json.encode(_record.toJson());
+      final path = await ExtStorage.getExternalStorageDirectory();
+      File('$path/Money Tracker/data.json').writeAsStringSync(data);
+    }  catch (e) {
+      throw e;
+    }
+  }
+
+  restoreFromCloud(MoneyRecord moneyRecord)async{
+    try {
+      _record=moneyRecord;
+      await saveData();
+      notifyListeners();
+    }  catch (e) {
+      throw e;
+    }
   }
 
   uploadData() async {

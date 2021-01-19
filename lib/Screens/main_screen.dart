@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Data.dart';
 import 'package:newmoneytracker/Screens/backup_screen.dart';
 import 'package:newmoneytracker/Screens/theme_screen.dart';
-import '../Widgets/main_screen_widgets.dart';
+import '../Widgets/widgets.dart';
 import 'package:newmoneytracker/Data/constants.dart';
 import 'package:newmoneytracker/Screens/history.dart';
 import 'package:provider/provider.dart';

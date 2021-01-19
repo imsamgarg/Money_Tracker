@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:newmoneytracker/Data/MoneyRecord.dart';
 import 'package:newmoneytracker/Data/constants.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:intl/intl.dart';
 
 class Backup extends ChangeNotifier {
@@ -20,10 +19,17 @@ class Backup extends ChangeNotifier {
           .collection(lastDateCollectionName)
           .doc(userId)
           .get();
-      var _data = _documentReference.data()[lastDateKey];
-      if (_documentReference.data()[lastDateKey] != null)
+
+      var _data = (_documentReference.data() == null)
+          ? null
+          : _documentReference.data()[lastDateKey];
+      print(_data);
+      if (_data != null &&
+          (_documentReference.data()[lastDateKey] != null ||
+              _documentReference.data()[lastDateKey] == "")) {
         _lastBackupDate = DateTime.parse(_data);
-      _lastBackupDate = null;
+      } else
+        _lastBackupDate = null;
       return true;
     } catch (e) {
       throw e;
@@ -36,13 +42,16 @@ class Backup extends ChangeNotifier {
           .collection(recordCollectionName)
           .doc(userId)
           .get();
-         return _documentReference.data();
-    }  catch (e) {
+      return _documentReference.data();
+    } catch (e) {
       throw e;
     }
   }
 
-  Future performBackup(MoneyRecord record, String userId,) async {
+  Future performBackup(
+    MoneyRecord record,
+    String userId,
+  ) async {
     try {
       var time = DateTime.now();
       await _firebaseFirestore

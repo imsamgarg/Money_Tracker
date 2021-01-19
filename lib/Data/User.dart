@@ -44,9 +44,16 @@ class UserData extends ChangeNotifier {
     }
   }
 
+  Future<bool> loginAlreadyLoggedUser()async{
+    _user=_firebaseAuth.currentUser;
+    if(_user!=null)
+      return true;
+    return false;
+  }
   Future<bool> login() async {
     _user = _firebaseAuth.currentUser;
     if (_user != null) {
+      notifyListeners();
       return true;
     } else {
       try {
@@ -58,6 +65,7 @@ class UserData extends ChangeNotifier {
       }
     }
   }
+
   Future<bool> logout()async{
     try {
       _firebaseAuth.signOut();
