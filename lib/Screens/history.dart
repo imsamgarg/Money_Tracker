@@ -12,27 +12,6 @@ class HistoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Builder(
       builder: (context) => Scaffold(
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 22),
-          child: Hero(
-            tag: "Button",
-            child: FlatButton(
-              onPressed: () {},
-              color: redColor,
-              shape: cardShape,
-              child: Container(
-                height: 55,
-                child: Center(
-                  child: Text(
-                    'Delete All ',
-                    style:
-                        TextStyle(fontSize: fontSizeNormal, color: whiteColor),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
         appBar: AppBar(
           title: Text('History'),
         ),
