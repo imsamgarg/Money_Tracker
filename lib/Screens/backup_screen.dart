@@ -22,6 +22,8 @@ class _BackupScreenState extends State<BackupScreen> {
 
   Future fetchAllData() async {
     try {
+      if(Provider.of<ConnectivityResult>(context)==ConnectivityResult.none)
+        return false;
       final user = Provider.of<UserData>(context, listen: false);
       bool temp = await user.loginAlreadyLoggedUser();
       if (temp) {
