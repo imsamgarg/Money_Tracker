@@ -50,15 +50,15 @@ class UserData extends ChangeNotifier {
       return true;
     return false;
   }
-  Future<bool> login() async {
+  Future<bool> login([bool shouldNotNotify]) async {
     _user = _firebaseAuth.currentUser;
     if (_user != null) {
-      notifyListeners();
+      if(shouldNotNotify!=true)notifyListeners();
       return true;
     } else {
       try {
         await _loginUser();
-        notifyListeners();
+        if(shouldNotNotify!=true)notifyListeners();
         return true;
       } catch (e) {
         throw e;
