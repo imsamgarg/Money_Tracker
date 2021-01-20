@@ -256,6 +256,7 @@ class LoginButton extends StatelessWidget {
         ConnectivityResult network = context.watch<ConnectivityResult>();
         bool isConnected = network == ConnectivityResult.none ? false : true;
         return RaisedButton(
+          textColor: whiteColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
               Radius.circular(
