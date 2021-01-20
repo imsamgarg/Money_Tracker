@@ -171,7 +171,7 @@ class LastBackupDateText extends StatelessWidget {
 class EmailText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserData>(context,listen: false);
+    final userData = Provider.of<UserData>(context);
     final backup=Provider.of<Backup>(context,listen: false);
     final loadingWidget = Provider.of<LoadingClass>(context,listen: false);
     // TODO: implement build

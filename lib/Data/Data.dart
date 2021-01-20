@@ -38,8 +38,6 @@ class Data extends ChangeNotifier {
     final path = await ExtStorage.getExternalStorageDirectory();
     String stringFile;
     File file = File('$path/Money Tracker/data.json');
-    print(path);
-
     try {
       if (file.existsSync()) {
         stringFile = file.readAsStringSync();
