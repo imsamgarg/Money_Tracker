@@ -171,8 +171,9 @@ class LastBackupDateText extends StatelessWidget {
 class EmailText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final userData = Provider.of<UserData>(context);
-    final loadingWidget = Provider.of<LoadingClass>(context);
+    final userData = Provider.of<UserData>(context,listen: false);
+    final backup=Provider.of<Backup>(context,listen: false);
+    final loadingWidget = Provider.of<LoadingClass>(context,listen: false);
     // TODO: implement build
     return (!userData.isUserLogged)
         ? LoginButton(
@@ -181,6 +182,8 @@ class EmailText extends StatelessWidget {
               try {
                 loadingWidget.startLoading();
                 await userData.login();
+                await backup.loadLastBackupDate(userData.userId);
+                backup.notifyListener();
                 loadingWidget.stopLoading();
               }  catch (e) {
                 print(e);

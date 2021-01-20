@@ -13,6 +13,10 @@ class Backup extends ChangeNotifier {
     return DateFormat.yMd().add_jm().format(_lastBackupDate);
   }
 
+
+  notifyListener(){
+    notifyListeners();
+  }
   Future loadLastBackupDate(String userId) async {
     try {
       DocumentSnapshot _documentReference = await _firebaseFirestore
