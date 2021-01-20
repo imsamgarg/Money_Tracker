@@ -101,8 +101,6 @@ class LastRecordText extends StatelessWidget {
       builder: (BuildContext context, Data value, Widget child) {
         final color =
             (value.lastTransaction.isNegative) ? redColor : greenColor;
-        // final sign =(value.lastTransaction.isNegative)?String.fromCharCode(0x2212):String.fromCharCode(0x002B);
-        // print(value.yesterdayAmount.isNegative);
         return Text(
           '$rupeeSign ${value.lastTransaction.abs()}',
           style: TextStyle(color: color, fontSize: fontSizeNormal + 4),

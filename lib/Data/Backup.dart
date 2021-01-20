@@ -27,7 +27,7 @@ class Backup extends ChangeNotifier {
       var _data = (_documentReference.data() == null)
           ? null
           : _documentReference.data()[lastDateKey];
-      print(_data);
+
       if (_data != null &&
           (_documentReference.data()[lastDateKey] != null ||
               _documentReference.data()[lastDateKey] == "")) {

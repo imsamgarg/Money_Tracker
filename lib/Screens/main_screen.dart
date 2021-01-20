@@ -426,8 +426,7 @@ class _BottomSheetColumnState extends State<BottomSheetColumn> {
                 builder: (BuildContext context, Data value, Widget child) =>
                     ActionButton(
                   function: () {
-                    print(remarks);
-                    print(amount);
+
                     if (remarks != null && amount > 0) {
                       Provider.of<Data>(context, listen: false)
                           .addTransaction(amount, remarks);

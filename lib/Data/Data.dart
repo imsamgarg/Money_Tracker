@@ -56,26 +56,26 @@ class Data extends ChangeNotifier {
         _record = MoneyRecord(balance: null, record: []);
       }
     } on FileSystemException catch (e) {
-      print(e);
+
       throw e;
     }
   }
 
   _updateTotalBalance(double amount) {
-    print('fuck man $amount');
+
     _record.balance = (_record.balance ?? 0) + amount;
     saveData();
   }
 
   addTransaction(double amount, String remarks) {
-    print('$amount,$remarks');
+
     _transactionRecord = Record(
         amount: amount,
         date: DateTime.now().toLocal().toString(),
         remarks: remarks);
-    print('ethe');
+
     _record.record.insert(0, _transactionRecord);
-    print(_transactionRecord.amount);
+
     _updateTotalBalance(amount);
     notifyListeners();
   }
@@ -87,9 +87,9 @@ class Data extends ChangeNotifier {
         _record.record=[];
       }
     else {
-      print(_record.balance);
+
       _record.balance = _record.balance - _record.record[index].amount;
-      print(_record.balance);
+
       _record.record.removeAt(index);
     }
       saveData();

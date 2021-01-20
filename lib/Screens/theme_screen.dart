@@ -114,11 +114,10 @@ class ThemeRadioTile extends StatelessWidget {
             Provider.of<ThemeManager>(context, listen: false)
                 .changeThemeMode(value, shared)
                 .then((value) {
-              print(value);
               loadingClass.stopLoading();
               loadingClass.showSuccessMsg("Theme Changed SuccessFully");
             }).catchError((e) {
-              print(e);
+
               loadingClass.stopLoading();
               loadingClass.showError("Something Went Wrong Try Again!");
             });
@@ -210,7 +209,7 @@ class ChangeColorButton extends StatelessWidget {
             loadingClass.stopLoading();
             loadingClass.showSuccessMsg("Accent Color Changed SuccessFully");
           }).catchError((e) {
-            print(e);
+
             loadingClass.stopLoading();
             loadingClass.showError("Something Went Wrong Try Again!");
           });

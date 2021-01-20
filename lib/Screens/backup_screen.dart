@@ -34,7 +34,7 @@ class _BackupScreenState extends State<BackupScreen> {
       }
       return false;
     } catch (e) {
-      print(e);
+
       throw e;
     }
   }
@@ -186,7 +186,6 @@ class EmailText extends StatelessWidget {
                 backup.notifyListener();
                 loadingWidget.stopLoading();
               }  catch (e) {
-                print(e);
                 loadingWidget.showError("Something Went Wrong");
               }
               // loadingWidget.showSuccessMsg("User ")
@@ -229,11 +228,11 @@ class LogoutButton extends StatelessWidget {
             padding: const EdgeInsets.only(right: 4.0),
             child: LoginButton(
               text: "Logout",
-              function: () {
-                userData
-                    .logout()
-                    .then((value) => print(value))
-                    .catchError((onError) => print(onError));
+              function: ()async {
+                try {
+                  await userData.logout();
+                } catch (e) {
+                }
               },
             ),
           )
@@ -305,7 +304,7 @@ class RestoreButton extends StatelessWidget {
                     loadingWidget.stopLoading();
                     loadingWidget.showSuccessMsg("Restore Done!");
                   } catch (e) {
-                    print(e);
+
                     loadingWidget.showError("Restore Failed");
                   }
                 }
@@ -358,7 +357,6 @@ class BackupButton extends StatelessWidget {
                     loadingWidget.stopLoading();
                     loadingWidget.showSuccessMsg("Backup Done Successfully!!");
                   } catch (e) {
-                    print(e);
                     loadingWidget.showError("SomeThing Went Wrong");
                   }
                 }
