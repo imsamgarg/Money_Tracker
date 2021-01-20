@@ -22,7 +22,7 @@ class _BackupScreenState extends State<BackupScreen> {
 
   Future fetchAllData() async {
     try {
-      if(Provider.of<ConnectivityResult>(context)==ConnectivityResult.none)
+      if(Provider.of<ConnectivityResult>(context,listen: false)==ConnectivityResult.none)
         return false;
       final user = Provider.of<UserData>(context, listen: false);
       bool temp = await user.loginAlreadyLoggedUser();
@@ -290,6 +290,8 @@ class RestoreButton extends StatelessWidget {
             backup.lastBackupDate != "Never";
 
         return OutlineButton(
+          // focusColor: Theme.of(context).accentColor,
+          highlightedBorderColor: Theme.of(context).accentColor,
           onPressed: isEnabled
               ? () async {
                   try {
