@@ -37,7 +37,7 @@ class Tile extends StatefulWidget {
   final Data record;
   final int index;
 
-  Tile({this.record, this.index});
+  Tile({required this.record, required this.index});
 
   @override
   _TileState createState() => _TileState();
@@ -132,7 +132,7 @@ class _TileState extends State<Tile> {
           duration: Duration(milliseconds: 200),
           child: Card(
             margin: EdgeInsets.only(left: 4, right: 4),
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).colorScheme.secondary,
             child: Center(
               child: Padding(
                 padding: const EdgeInsets.all(10),

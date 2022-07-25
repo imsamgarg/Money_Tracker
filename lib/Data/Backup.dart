@@ -1,22 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 import 'package:newmoneytracker/Data/MoneyRecord.dart';
 import 'package:newmoneytracker/Data/constants.dart';
-import 'package:intl/intl.dart';
 
 class Backup extends ChangeNotifier {
-  DateTime _lastBackupDate;
+  DateTime? _lastBackupDate;
   FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
 
   String get lastBackupDate {
     if (_lastBackupDate == null) return "Never";
-    return DateFormat.yMd().add_jm().format(_lastBackupDate);
+    return DateFormat.yMd().add_jm().format(_lastBackupDate!);
   }
 
-
-  notifyListener(){
-    notifyListeners();
-  }
   Future loadLastBackupDate(String userId) async {
     try {
       DocumentSnapshot _documentReference = await _firebaseFirestore
@@ -26,11 +22,11 @@ class Backup extends ChangeNotifier {
 
       var _data = (_documentReference.data() == null)
           ? null
-          : _documentReference.data()[lastDateKey];
+          : _documentReference[lastDateKey];
 
       if (_data != null &&
-          (_documentReference.data()[lastDateKey] != null ||
-              _documentReference.data()[lastDateKey] == "")) {
+          (_documentReference[lastDateKey] != null ||
+              _documentReference[lastDateKey] == "")) {
         _lastBackupDate = DateTime.parse(_data);
       } else
         _lastBackupDate = null;

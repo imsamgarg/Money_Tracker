@@ -1,13 +1,13 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Data.dart';
-import 'package:newmoneytracker/Screens/backup_screen.dart';
-import 'package:newmoneytracker/Screens/theme_screen.dart';
-import '../Widgets/widgets.dart';
 import 'package:newmoneytracker/Data/constants.dart';
+import 'package:newmoneytracker/Screens/backup_screen.dart';
 import 'package:newmoneytracker/Screens/history.dart';
+import 'package:newmoneytracker/Screens/theme_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:permission_handler/permission_handler.dart';
+
+import '../Widgets/widgets.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String route = 'main_screen';
@@ -17,27 +17,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  Future<FirebaseApp> _initiateFirebaseApp;
-
-  Future<bool> _loadDataFromDisk;
+  late Future<FirebaseApp?> _initiateFirebaseApp;
+  late Future<bool> _loadDataFromDisk;
 
   Future<bool> fetchData() async {
     try {
-      PermissionStatus status = await Permission.storage.request();
-      if (status.isGranted) {
-        await Provider.of<Data>(context, listen: false).uploadData();
-        return true;
-      } else
-        return false;
-    }  catch (e) {
-      throw e;
+      // PermissionStatus status = await Permission.storage.request();
+      // if (status.isGranted) {
+      await Provider.of<Data>(context, listen: false).uploadData();
+      return true;
+      // } else
+      // return false;
+    } catch (e) {
+      rethrow;
     }
   }
 
   @override
   void initState() {
     _loadDataFromDisk = fetchData();
-    _initiateFirebaseApp = Firebase.initializeApp();
+    _initiateFirebaseApp = Future.value(null);
     super.initState();
   }
 
@@ -45,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final normalTextStyle = TextStyle(
       fontSize: fontSizeNormal,
-      color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.7),
+      color: Theme.of(context).textTheme.bodyText1?.color!.withOpacity(0.7),
     );
     return FutureBuilder(
       future: _initiateFirebaseApp,
@@ -61,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
           return FutureBuilder(
             future: _loadDataFromDisk,
             builder: (context, snapshot) {
-              if(snapshot.hasError)
+              if (snapshot.hasError)
                 return Scaffold(
                   body: Center(
                     child: Text(
@@ -92,9 +91,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               Flexible(
                                 child: Center(
                                     child: Text(
-                                      "Welcome",
-                                      style: TextStyle(fontSize: headingFontSize),
-                                    )),
+                                  "Welcome",
+                                  style: TextStyle(fontSize: headingFontSize),
+                                )),
                               ),
                               paddingWidget,
                               Expanded(
@@ -104,7 +103,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     margin: EdgeInsets.only(left: 20),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: <Widget>[
                                         Expanded(
                                           child: Container(
@@ -143,12 +143,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     color: Theme.of(context)
                                                         .textTheme
                                                         .bodyText1
-                                                        .color
-                                                        .withOpacity(0.7),
+                                                        ?.color
+                                                        ?.withOpacity(0.7),
                                                   ),
                                                 ),
                                               ),
-                                              Flexible(child: YesterdayDataRow()),
+                                              Flexible(
+                                                  child: YesterdayDataRow()),
                                             ],
                                           ),
                                         ),
@@ -164,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           padding: const EdgeInsets.all(10),
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.start,
+                                                MainAxisAlignment.start,
                                             children: <Widget>[
                                               Expanded(
                                                 child: Text(
@@ -173,7 +174,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                               ),
                                               Flexible(
-                                                  child: LastSevenDaysDataRow()),
+                                                  child:
+                                                      LastSevenDaysDataRow()),
                                             ],
                                           ),
                                         ),
@@ -191,7 +193,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   child: Container(
                                     margin: EdgeInsets.only(left: 20),
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       children: <Widget>[
                                         Expanded(
                                           child: Container(
@@ -253,12 +256,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class ThreeDotMenu extends StatelessWidget {
   const ThreeDotMenu({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton(
+    return PopupMenuButton<String>(
       onSelected: (value) {
         Navigator.pushNamed(context, value);
       },
@@ -272,7 +275,7 @@ class ThreeDotMenu extends StatelessWidget {
               children: [
                 Icon(
                   Icons.history,
-                  color: Theme.of(context).textTheme.bodyText1.color,
+                  color: Theme.of(context).textTheme.bodyText1?.color,
                 ),
                 const SizedBox(
                   width: 20,
@@ -290,7 +293,7 @@ class ThreeDotMenu extends StatelessWidget {
               children: [
                 Icon(
                   Icons.backup,
-                  color: Theme.of(context).textTheme.bodyText1.color,
+                  color: Theme.of(context).textTheme.bodyText1?.color,
                 ),
                 const SizedBox(
                   width: 20,
@@ -308,7 +311,7 @@ class ThreeDotMenu extends StatelessWidget {
               children: [
                 Icon(
                   Icons.format_paint,
-                  color: Theme.of(context).textTheme.bodyText1.color,
+                  color: Theme.of(context).textTheme.bodyText1?.color,
                 ),
                 const SizedBox(
                   width: 20,
@@ -356,7 +359,7 @@ class NewTransactionButton extends StatelessWidget {
       tag: "Button",
       child: FlatButton(
         onPressed: () => _showBottomSheet(context),
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         shape: cardShape,
         child: Container(
           height: 55,
@@ -378,14 +381,14 @@ class BottomSheetColumn extends StatefulWidget {
 }
 
 class _BottomSheetColumnState extends State<BottomSheetColumn> {
-  String remarks;
-  double amount;
+  late String remarks;
+  late double amount;
 
   @override
   Widget build(BuildContext context) {
     final normalTextStyle = TextStyle(
       fontSize: fontSizeNormal,
-      color: Theme.of(context).textTheme.bodyText1.color.withOpacity(0.7),
+      color: Theme.of(context).textTheme.bodyText1!.color?.withOpacity(0.7),
     );
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -423,11 +426,10 @@ class _BottomSheetColumnState extends State<BottomSheetColumn> {
           child: Row(
             children: <Widget>[
               Consumer<Data>(
-                builder: (BuildContext context, Data value, Widget child) =>
+                builder: (BuildContext context, Data value, child) =>
                     ActionButton(
                   function: () {
-
-                    if (remarks != null && amount > 0) {
+                    if (amount > 0) {
                       Provider.of<Data>(context, listen: false)
                           .addTransaction(amount, remarks);
                       Navigator.pop(context);
@@ -441,8 +443,7 @@ class _BottomSheetColumnState extends State<BottomSheetColumn> {
               ),
               ActionButton(
                 function: () {
-                  if (remarks != null &&
-                      amount > 0 &&
+                  if (amount > 0 &&
                       amount <=
                           Provider.of<Data>(context, listen: false).balance) {
                     Provider.of<Data>(context, listen: false)
@@ -465,9 +466,9 @@ class _BottomSheetColumnState extends State<BottomSheetColumn> {
 
 class ActionButton extends StatelessWidget {
   final String text;
-  final Function function;
+  final VoidCallback function;
 
-  ActionButton({this.function, this.text});
+  ActionButton({required this.function, required this.text});
 
   @override
   Widget build(BuildContext context) {
@@ -477,7 +478,7 @@ class ActionButton extends StatelessWidget {
       child: FlatButton(
         onPressed: function,
         shape: cardShape,
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
         child: Center(
           child: Text(
             text,

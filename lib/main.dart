@@ -1,5 +1,4 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:newmoneytracker/Data/Data.dart';
@@ -10,6 +9,7 @@ import 'package:newmoneytracker/Screens/history.dart';
 import 'package:newmoneytracker/Screens/theme_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'Data/Backup.dart';
 import 'Data/User.dart';
 import 'Screens/main_screen.dart';
@@ -26,10 +26,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         StreamProvider<ConnectivityResult>.value(
-            initialData: ConnectivityResult.none,
-            value: Connectivity().onConnectivityChanged),
-        FutureProvider.value(
-          value: SharedPreferences.getInstance(),
+          initialData: ConnectivityResult.none,
+          value: Connectivity().onConnectivityChanged,
+        ),
+        FutureProvider(
+          initialData: null,
+          create: (BuildContext context) {
+            return SharedPreferences.getInstance();
+          },
         ),
         ChangeNotifierProvider(
           create: (BuildContext context) => Data(),
@@ -41,42 +45,34 @@ class MyApp extends StatelessWidget {
           create: (BuildContext context) => UserData(),
         ),
       ],
-      child: Consumer<SharedPreferences>(
+      child: Consumer<SharedPreferences?>(
         builder: (context, value, child) {
-          if (value == null)
-            return MaterialApp(
-              theme: ThemeData(accentColor: blueAccentColor),
-              home: Scaffold(
-                body: Center(
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            );
-          final _accentColor = value.getInt(sharedColorKey) == null
+          final _accentColor = value?.getInt(sharedColorKey) == null
               ? blueAccentColor
-              : Color(value.getInt(sharedColorKey));
-          final _themeMode = value.getInt(sharedThemeModeKey) == null
+              : Color(value!.getInt(sharedColorKey)!);
+          final _themeMode = value?.getInt(sharedThemeModeKey) == null
               ? ThemeMode.system
-              : ThemeMode.values[value.getInt(sharedThemeModeKey)];
+              : ThemeMode.values[value!.getInt(sharedThemeModeKey)!];
           return ChangeNotifierProvider(
             create: (BuildContext context) => ThemeManager(
               accentColor: _accentColor,
               themeMode: _themeMode,
             ),
             child: Consumer<ThemeManager>(
-              builder: (BuildContext context, value, Widget child) =>
-                  MaterialApp(
-                theme: value.lightTheme,
-                darkTheme: value.darkTheme,
-                themeMode: value.themeMode,
-                routes: {
-                  HistoryScreen.route: (context) => HistoryScreen(),
-                  HomeScreen.route: (context) => HomeScreen(),
-                  BackupScreen.route: (context) => BackupScreen(),
-                  ThemeScreen.route: (context) => ThemeScreen(),
-                },
-                initialRoute: HomeScreen.route,
-              ),
+              builder: (BuildContext context, value, Widget? child) {
+                return MaterialApp(
+                  theme: value.lightTheme,
+                  darkTheme: value.darkTheme,
+                  themeMode: value.themeMode,
+                  routes: {
+                    HistoryScreen.route: (context) => HistoryScreen(),
+                    HomeScreen.route: (context) => HomeScreen(),
+                    BackupScreen.route: (context) => BackupScreen(),
+                    ThemeScreen.route: (context) => ThemeScreen(),
+                  },
+                  initialRoute: HomeScreen.route,
+                );
+              },
             ),
           );
         },

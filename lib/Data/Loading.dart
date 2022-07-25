@@ -6,6 +6,12 @@ class LoadingClass extends ChangeNotifier {
   bool isError = false;
   bool isSuccess = false;
 
+  @override
+  void notifyListeners() {
+    if (!hasListeners) return;
+    super.notifyListeners();
+  }
+
   void startLoading() {
     isLoading = true;
     notifyListeners();
@@ -21,7 +27,7 @@ class LoadingClass extends ChangeNotifier {
     isError = true;
     notifyListeners();
     Future.delayed(Duration(seconds: 2)).then((value) {
-      _hideErrorMsg();
+      if (hasListeners) _hideErrorMsg();
     });
   }
 
@@ -36,7 +42,7 @@ class LoadingClass extends ChangeNotifier {
     status = msg;
     notifyListeners();
     Future.delayed(Duration(seconds: 2)).then((value) {
-      _hideSuccessMsg();
+      if (hasListeners) _hideSuccessMsg();
     });
   }
 

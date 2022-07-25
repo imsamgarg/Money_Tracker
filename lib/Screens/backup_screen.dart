@@ -1,5 +1,4 @@
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Backup.dart';
 import 'package:newmoneytracker/Data/Data.dart';
@@ -18,12 +17,12 @@ class BackupScreen extends StatefulWidget {
 }
 
 class _BackupScreenState extends State<BackupScreen> {
-  Future _instance;
+  late Future _instance;
 
   Future fetchAllData() async {
     try {
-      if(Provider.of<ConnectivityResult>(context,listen: false)==ConnectivityResult.none)
-        return false;
+      if (Provider.of<ConnectivityResult>(context, listen: false) ==
+          ConnectivityResult.none) return false;
       final user = Provider.of<UserData>(context, listen: false);
       bool temp = await user.loginAlreadyLoggedUser();
       if (temp) {
@@ -34,7 +33,6 @@ class _BackupScreenState extends State<BackupScreen> {
       }
       return false;
     } catch (e) {
-
       throw e;
     }
   }
@@ -122,9 +120,9 @@ class _BackupScreenState extends State<BackupScreen> {
 //Row
 class CustomTile extends StatelessWidget {
   const CustomTile({
-    Key key,
-    @required this.text,
-    @required this.secondChild,
+    Key? key,
+    required this.text,
+    required this.secondChild,
   }) : super(key: key);
 
   final String text;
@@ -153,7 +151,7 @@ class CustomTile extends StatelessWidget {
 // Custom Texts
 class LastBackupDateText extends StatelessWidget {
   const LastBackupDateText({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -172,9 +170,8 @@ class EmailText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
-    final backup=Provider.of<Backup>(context,listen: false);
-    final loadingWidget = Provider.of<LoadingClass>(context,listen: false);
-    // TODO: implement build
+    final backup = Provider.of<Backup>(context, listen: false);
+    final loadingWidget = Provider.of<LoadingClass>(context, listen: false);
     return (!userData.isUserLogged)
         ? LoginButton(
             text: "login",
@@ -183,9 +180,9 @@ class EmailText extends StatelessWidget {
                 loadingWidget.startLoading();
                 await userData.login();
                 await backup.loadLastBackupDate(userData.userId);
-                backup.notifyListener();
+                backup.notifyListeners();
                 loadingWidget.stopLoading();
-              }  catch (e) {
+              } catch (e) {
                 loadingWidget.showError("Something Went Wrong");
               }
               // loadingWidget.showSuccessMsg("User ")
@@ -200,7 +197,7 @@ class EmailText extends StatelessWidget {
 
 class UserNameText extends StatelessWidget {
   const UserNameText({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -222,17 +219,15 @@ class LogoutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final userData = Provider.of<UserData>(context);
 
-    // TODO: implement build
     return (userData.isUserLogged)
         ? Padding(
             padding: const EdgeInsets.only(right: 4.0),
             child: LoginButton(
               text: "Logout",
-              function: ()async {
+              function: () async {
                 try {
                   await userData.logout();
-                } catch (e) {
-                }
+                } catch (e) {}
               },
             ),
           )
@@ -242,17 +237,17 @@ class LogoutButton extends StatelessWidget {
 
 class LoginButton extends StatelessWidget {
   const LoginButton({
-    Key key,
-    this.function,
-    this.text,
+    Key? key,
+    required this.function,
+    required this.text,
   }) : super(key: key);
   final String text;
-  final Function function;
+  final VoidCallback function;
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectivityResult>(
-      builder: (BuildContext context, value, Widget child) {
+      builder: (BuildContext context, value, child) {
         ConnectivityResult network = context.watch<ConnectivityResult>();
         bool isConnected = network == ConnectivityResult.none ? false : true;
         return RaisedButton(
@@ -265,7 +260,7 @@ class LoginButton extends StatelessWidget {
             ),
           ),
           onPressed: isConnected ? function : null,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           child: Text(
             text,
           ),
@@ -277,14 +272,14 @@ class LoginButton extends StatelessWidget {
 
 class RestoreButton extends StatelessWidget {
   const RestoreButton({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer4<ConnectivityResult, Backup, Data, UserData>(
       builder: (BuildContext context, connectionResult, backup, moneyRecord,
-          userData, Widget child) {
+          userData, Widget? child) {
         ConnectivityResult network = context.watch<ConnectivityResult>();
         final loadingWidget = Provider.of<LoadingClass>(context);
         bool isConnected = network == ConnectivityResult.none ? false : true;
@@ -292,9 +287,9 @@ class RestoreButton extends StatelessWidget {
             userData.isUserLogged &&
             backup.lastBackupDate != "Never";
 
-        return OutlineButton(
+        return OutlinedButton(
           // focusColor: Theme.of(context).accentColor,
-          highlightedBorderColor: Theme.of(context).accentColor,
+          // highlightedBorderColor: Theme.of(context).colorScheme.secondary,
           onPressed: isEnabled
               ? () async {
                   try {
@@ -305,14 +300,10 @@ class RestoreButton extends StatelessWidget {
                     loadingWidget.stopLoading();
                     loadingWidget.showSuccessMsg("Restore Done!");
                   } catch (e) {
-
                     loadingWidget.showError("Restore Failed");
                   }
                 }
               : null,
-          borderSide:
-              BorderSide(color: Theme.of(context).accentColor, width: 1),
-          shape: cardShape,
           child: Container(
             height: 55,
             child: Center(
@@ -321,7 +312,7 @@ class RestoreButton extends StatelessWidget {
                 style: TextStyle(
                     fontSize: fontSizeNormal,
                     color: isEnabled
-                        ? Theme.of(context).accentColor
+                        ? Theme.of(context).colorScheme.secondary
                         : Colors.grey),
               ),
             ),
@@ -334,14 +325,14 @@ class RestoreButton extends StatelessWidget {
 
 class BackupButton extends StatelessWidget {
   const BackupButton({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Consumer3<ConnectivityResult, Backup, UserData>(
       builder: (BuildContext context, connectionResult, backup, userData,
-          Widget child) {
+          Widget? child) {
         ConnectivityResult network = connectionResult;
         final d = Provider.of<Data>(context, listen: false);
         // bool isLogged=userData.isUserLogged?true:false;
@@ -362,7 +353,7 @@ class BackupButton extends StatelessWidget {
                   }
                 }
               : null,
-          color: Theme.of(context).accentColor,
+          color: Theme.of(context).colorScheme.secondary,
           shape: cardShape,
           child: Container(
             height: 55,
@@ -385,8 +376,8 @@ Cell Containing Text
 
 class Cell extends StatelessWidget {
   Cell({
-    Key key,
-    @required this.text,
+    Key? key,
+    required this.text,
     this.coloredText = false,
   }) : super(key: key);
 
@@ -403,8 +394,8 @@ class Cell extends StatelessWidget {
         style: TextStyle(
             fontSize: 18,
             color: coloredText
-                ? Theme.of(context).accentColor
-                : Theme.of(context).textTheme.bodyText1.color),
+                ? Theme.of(context).colorScheme.secondary
+                : Theme.of(context).textTheme.bodyText1!.color),
       ),
     );
   }
@@ -418,7 +409,7 @@ class NetworkStatus extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<ConnectivityResult>(
-      builder: (BuildContext context, value, Widget child) {
+      builder: (BuildContext context, value, Widget? child) {
         ConnectivityResult network = context.watch<ConnectivityResult>();
         Color color =
             network == ConnectivityResult.none ? redColor : greenColor;

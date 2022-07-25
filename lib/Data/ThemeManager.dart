@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import 'constants.dart';
 
 class ThemeManager extends ChangeNotifier {
@@ -8,9 +9,8 @@ class ThemeManager extends ChangeNotifier {
   ThemeData darkTheme = ThemeData.dark();
   ThemeMode themeMode;
 
-  ThemeManager({this.themeMode, this.accentColor})
+  ThemeManager({required this.themeMode, required this.accentColor})
       : lightTheme = ThemeData.light().copyWith(
-          accentColor: accentColor,
           textSelectionHandleColor: accentColor,
           cursorColor: accentColor,
           appBarTheme: AppBarTheme(color: accentColor),
@@ -24,9 +24,10 @@ class ThemeManager extends ChangeNotifier {
               ),
             ),
           ),
+          colorScheme:
+              ColorScheme.fromSwatch().copyWith(secondary: accentColor),
         ),
         darkTheme = ThemeData.dark().copyWith(
-          accentColor: accentColor,
           textSelectionHandleColor: accentColor,
           toggleableActiveColor: accentColor,
           cursorColor: accentColor,
@@ -39,12 +40,13 @@ class ThemeManager extends ChangeNotifier {
               ),
             ),
           ),
+          colorScheme:
+              ColorScheme.fromSwatch().copyWith(secondary: accentColor),
         );
 
   Future<bool> changeAccentColor(
       Color color, SharedPreferences sharedPreferences) async {
     lightTheme = lightTheme.copyWith(
-      accentColor: color,
       textSelectionHandleColor: color,
       appBarTheme: AppBarTheme(color: color),
       toggleableActiveColor: color,
@@ -65,11 +67,9 @@ class ThemeManager extends ChangeNotifier {
           ),
         ),
       ),
+      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: color),
     );
     darkTheme = darkTheme.copyWith(
-      accentColor: color,
-      // iconTheme: IconThemeData(),
-      // appBarTheme: AppBarTheme(color: color),
       toggleableActiveColor: color,
       cursorColor: color,
       textSelectionHandleColor: color,
@@ -89,6 +89,7 @@ class ThemeManager extends ChangeNotifier {
           ),
         ),
       ),
+      colorScheme: ColorScheme.fromSwatch().copyWith(secondary: color),
     );
     try {
       bool temp = await sharedPreferences.setInt(sharedColorKey, color.value);

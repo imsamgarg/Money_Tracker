@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:newmoneytracker/Data/Loading.dart';
 import 'package:newmoneytracker/Data/ThemeManager.dart';
@@ -10,7 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemeScreen extends StatefulWidget {
   static const String route = "theme_screen";
 
-  ThemeScreen({Key key}) : super(key: key);
+  ThemeScreen({Key? key}) : super(key: key);
 
   @override
   _ThemeScreenState createState() => _ThemeScreenState();
@@ -60,7 +59,7 @@ class _ThemeScreenState extends State<ThemeScreen> {
 
 class ThemeCard extends StatelessWidget {
   const ThemeCard({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -92,9 +91,9 @@ class ThemeCard extends StatelessWidget {
 
 class ThemeRadioTile extends StatelessWidget {
   const ThemeRadioTile({
-    Key key,
-    this.themeMode,
-    this.title,
+    Key? key,
+    required this.themeMode,
+    required this.title,
   }) : super(key: key);
 
   final ThemeMode themeMode;
@@ -105,19 +104,18 @@ class ThemeRadioTile extends StatelessWidget {
     final shared = Provider.of<SharedPreferences>(context, listen: false);
     final loadingClass = Provider.of<LoadingClass>(context, listen: false);
     return Consumer<ThemeManager>(
-      builder: (context, value, _) => RadioListTile(
+      builder: (context, value, _) => RadioListTile<ThemeMode>(
           value: themeMode,
           groupValue: value.themeMode,
           title: Text(title),
           onChanged: (value) {
             loadingClass.startLoading();
             Provider.of<ThemeManager>(context, listen: false)
-                .changeThemeMode(value, shared)
+                .changeThemeMode(value!, shared)
                 .then((value) {
               loadingClass.stopLoading();
               loadingClass.showSuccessMsg("Theme Changed SuccessFully");
             }).catchError((e) {
-
               loadingClass.stopLoading();
               loadingClass.showError("Something Went Wrong Try Again!");
             });
@@ -128,7 +126,7 @@ class ThemeRadioTile extends StatelessWidget {
 
 class AccentColorCard extends StatelessWidget {
   const AccentColorCard({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -189,7 +187,7 @@ class AccentColorCard extends StatelessWidget {
 class ChangeColorButton extends StatelessWidget {
   static const double padding = 5.0;
 
-  const ChangeColorButton({Key key, this.color}) : super(key: key);
+  const ChangeColorButton({Key? key, required this.color}) : super(key: key);
 
   final Color color;
 
@@ -209,7 +207,6 @@ class ChangeColorButton extends StatelessWidget {
             loadingClass.stopLoading();
             loadingClass.showSuccessMsg("Accent Color Changed SuccessFully");
           }).catchError((e) {
-
             loadingClass.stopLoading();
             loadingClass.showError("Something Went Wrong Try Again!");
           });
